@@ -1,0 +1,21 @@
+# EditorConfig: http://editorconfig.org
+
+# Top-most editorconfig file
+root = true
+
+# Defaults
+[**]
+charset = utf-8
+indent_style = space
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.kt]
+indent_size = 4
+
+[*.xml]
+indent_size = 2
+
+[pom.xml]
+indent_size = 4

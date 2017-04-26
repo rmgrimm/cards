@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cards-backend-in-memory" />
+        <module name="cards-base" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cards-backend-in-memory" target="1.5" />
+      <module name="cards-backends" target="1.5" />
+      <module name="cards-base" target="1.5" />
+      <module name="cards-parent" target="1.5" />
+      <module name="cards-root" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

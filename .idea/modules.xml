@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/backends/in-memory/cards-backend-in-memory.iml" filepath="$PROJECT_DIR$/backends/in-memory/cards-backend-in-memory.iml" group="cards-backends and modules" />
+      <module fileurl="file://$PROJECT_DIR$/backends/cards-backends.iml" filepath="$PROJECT_DIR$/backends/cards-backends.iml" group="cards-backends and modules" />
+      <module fileurl="file://$PROJECT_DIR$/base/cards-base.iml" filepath="$PROJECT_DIR$/base/cards-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent/cards-parent.iml" filepath="$PROJECT_DIR$/parent/cards-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cards-root.iml" filepath="$PROJECT_DIR$/cards-root.iml" />
+    </modules>
+  </component>
+</project>
