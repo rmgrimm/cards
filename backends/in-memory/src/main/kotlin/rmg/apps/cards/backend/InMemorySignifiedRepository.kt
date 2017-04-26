@@ -17,8 +17,8 @@ class InMemorySignifiedRepository : SignifiedRepository<Int> {
 
     private val backingList = ArrayList<Signified?>()
 
-    override fun add(elements: Signified): Int {
-        backingList.add(elements)
+    override fun add(element: Signified): Int {
+        backingList.add(element)
         return backingList.lastIndex
     }
 
@@ -40,11 +40,11 @@ class InMemorySignifiedRepository : SignifiedRepository<Int> {
     override fun clear() = backingList.clear()
 
     private fun internalPut(key: Int, value: Signified?): Signified? {
-        val output = get(key)
-
         while (backingList.lastIndex < key) {
             backingList.add(null)
         }
+
+        val output = backingList[key]
         backingList[key] = value
 
         return output

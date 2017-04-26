@@ -2,7 +2,7 @@ package rmg.apps.cards.base.model
 
 data class Signified(val type: Type, val signifiers: List<Signifier>) : List<Signifier> by signifiers {
     enum class Type {
-        NOUN, VERB, ADJECTIVE, ADVERB, EXCLAMATION,
+        DETERMINER, PRONOUN, NOUN, NUMERAL, MEASURE_WORD, VERB, ADJECTIVE, ADVERB, EXCLAMATION,
     }
 }
 
@@ -28,6 +28,7 @@ sealed class Signifier {
 
 data class WrittenWord(val locale: Locale, val word: String, val weight: Int?) : Signifier() {
     constructor(locale: Locale, word: String) : this(locale, word, word.length)
+    constructor(lang: String, country: String? = null, script: String? = null, word: String, weight: Int? = null) : this(Signifier.Locale(lang, country, script), word, weight)
 }
 
 data class Definition(val locale: Locale, val definition: String) : Signifier()

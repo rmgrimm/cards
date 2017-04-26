@@ -2,7 +2,6 @@ package rmg.apps.cards.base.model
 
 import org.junit.Assert.*
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import rmg.apps.cards.base.SignifiedRepository
 
@@ -17,6 +16,104 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
     lateinit var repository: R
 
     private fun generateEmptySignified(type: Signified.Type = Signified.Type.NOUN) = Signified(type, emptyList())
+
+    private fun addSignifiedsWithHoles(): I {
+        val removedId: I = repository.add(generateEmptySignified(Signified.Type.ADJECTIVE))
+        repository.addAll(
+            listOf(
+                generateEmptySignified(Signified.Type.NOUN),
+                generateEmptySignified(Signified.Type.VERB),
+                generateEmptySignified(Signified.Type.VERB)
+            ))
+        repository.remove(removedId)
+
+        return removedId
+    }
+
+    private fun addSignifiedForFindTests() {
+        repository.addAll(
+            listOf(
+                // The first several words of the HSK level 1 word list
+                Signified(type = Signified.Type.VERB,
+                    signifiers = listOf(
+                        WrittenWord(lang = "zho", script = "Hans", word = "爱"),
+                        WrittenWord(lang = "zho", script = "Hant", word = "愛"),
+                        WrittenWord(lang = "zho", script = "Piny", word = "ai4", weight = 1),
+                        WrittenWord(lang = "eng", word = "to love")
+                    )),
+                Signified(type = Signified.Type.NUMERAL,
+                    signifiers = listOf(
+                        WrittenWord(lang = "zho", script = "Hans", word = "八"),
+                        WrittenWord(lang = "zho", script = "Hant", word = "八"),
+                        WrittenWord(lang = "zho", script = "Piny", word = "ba1", weight = 1),
+                        WrittenWord(lang = "eng", word = "eight")
+                    )),
+                Signified(type = Signified.Type.NOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "zho", script = "Hans", word = "爸爸"),
+                        WrittenWord(lang = "zho", script = "Hant", word = "爸爸"),
+                        WrittenWord(lang = "zho", script = "Piny", word = "ba4ba5", weight = 2),
+                        WrittenWord(lang = "eng", word = "father")
+                    )),
+                Signified(type = Signified.Type.NOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "zho", script = "Hans", word = "杯子"),
+                        WrittenWord(lang = "zho", script = "Hant", word = "杯子"),
+                        WrittenWord(lang = "zho", script = "Piny", word = "bei1zi5", weight = 2),
+                        WrittenWord(lang = "eng", word = "cup")
+                    )),
+                Signified(type = Signified.Type.NOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "zho", script = "Hans", word = "北京"),
+                        WrittenWord(lang = "zho", script = "Hant", word = "北京"),
+                        WrittenWord(lang = "zho", script = "Piny", word = "bei3jing1", weight = 2),
+                        WrittenWord(lang = "eng", word = "Beijing")
+                    )),
+                Signified(type = Signified.Type.MEASURE_WORD,
+                    signifiers = listOf(
+                        WrittenWord(lang = "zho", script = "Hans", word = "本"),
+                        WrittenWord(lang = "zho", script = "Hant", word = "本"),
+                        WrittenWord(lang = "zho", script = "Piny", word = "ben3", weight = 1),
+                        WrittenWord(lang = "eng", word = "measure word for books")
+                    )),
+
+                // A few other words
+                Signified(type = Signified.Type.PRONOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "eng", word = "I"),
+                        WrittenWord(lang = "eng", word = "me"),
+                        WrittenWord(lang = "zho", script = "pinyin", word = "wo3", weight = 1)
+                    )),
+                Signified(type = Signified.Type.DETERMINER,
+                    signifiers = listOf(
+                        WrittenWord(lang = "eng", word = "My"),
+                        WrittenWord(lang = "zho", script = "pinyin", word = "wo3de5", weight = 2)
+                    )),
+                Signified(type = Signified.Type.PRONOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "eng", word = "You"),
+                        WrittenWord(lang = "zho", script = "pinyin", word = "ni3", weight = 1)
+                    )),
+                Signified(type = Signified.Type.DETERMINER,
+                    signifiers = listOf(
+                        WrittenWord(lang = "eng", word = "Your"),
+                        WrittenWord(lang = "zho", script = "pinyin", word = "ni3de5", weight = 2)
+                    )),
+                Signified(type = Signified.Type.PRONOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "eng", word = "He"),
+                        WrittenWord(lang = "eng", word = "Him"),
+                        WrittenWord(lang = "zho", script = "pinyin", word = "ta1", weight = 1)
+                    )),
+                Signified(type = Signified.Type.PRONOUN,
+                    signifiers = listOf(
+                        WrittenWord(lang = "eng", word = "She"),
+                        WrittenWord(lang = "eng", word = "Her"),
+                        WrittenWord(lang = "zho", script = "pinyin", word = "ta1", weight = 1)
+                    ))
+            ))
+    }
+
 
     /**
      * Generator for a working instance of the repository
@@ -108,12 +205,12 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
 
     @Test
     fun testGet_Success() {
-        repository.add(generateEmptySignified())
-        val signified = generateEmptySignified()
+        repository.add(generateEmptySignified(Signified.Type.VERB))
+        val signified = generateEmptySignified(Signified.Type.NOUN)
         val id = repository.add(signified)
-        repository.add(generateEmptySignified())
+        repository.add(generateEmptySignified(Signified.Type.ADJECTIVE))
 
-        assertSame(signified, repository[id])
+        assertEquals(signified, repository[id])
     }
 
     @Test
@@ -126,19 +223,6 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
         repository.add(generateEmptySignified())
 
         assertFalse(repository.isEmpty())
-    }
-
-    private fun addSignifiedsWithHoles(): I {
-        val removedId: I = repository.add(generateEmptySignified(Signified.Type.ADJECTIVE))
-        repository.addAll(
-            listOf(
-                generateEmptySignified(Signified.Type.NOUN),
-                generateEmptySignified(Signified.Type.VERB),
-                generateEmptySignified(Signified.Type.VERB)
-            ))
-        repository.remove(removedId)
-
-        return removedId
     }
 
     @Test
@@ -185,23 +269,76 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
     }
 
     @Test
-    @Ignore
-    fun put() {
+    fun testPut_OutOfBoundsSuccess() {
+        val signified = generateEmptySignified()
+
+        repository.put(getFirstId(), signified)
+
+        assertEquals(signified, repository[getFirstId()])
     }
 
     @Test
-    @Ignore
-    fun putAll() {
+    fun testPut_ReplaceSuccess() {
+        addSignifiedsWithHoles()
+        val id = repository.add(generateEmptySignified(Signified.Type.NOUN))
+        val newSignified = generateEmptySignified(Signified.Type.EXCLAMATION)
+
+        repository.put(id, newSignified)
+
+        assertEquals(newSignified, repository[id])
     }
 
     @Test
-    @Ignore("Remove has been tested by now")
-    fun remove() {
+    fun testPut_PreviouslyDisabled() {
+        val removedId = addSignifiedsWithHoles()
+        val newSignified = generateEmptySignified(Signified.Type.EXCLAMATION)
+
+        repository.put(removedId, newSignified)
+
+        assertEquals(newSignified, repository[removedId])
     }
 
     @Test
-    @Ignore
-    fun find() {
+    fun testPutAll_Success() {
+        val id1 = repository.add(generateEmptySignified(Signified.Type.NOUN))
+        val id2 = repository.add(generateEmptySignified(Signified.Type.NOUN))
+        val id3 = repository.add(generateEmptySignified(Signified.Type.NOUN))
+
+        repository.putAll(hashMapOf(
+            id1 to generateEmptySignified(Signified.Type.ADJECTIVE),
+            id2 to generateEmptySignified(Signified.Type.ADJECTIVE),
+            id3 to generateEmptySignified(Signified.Type.ADJECTIVE)
+        ))
+
+        assertEquals(3, repository.size)
+        assertEquals(3, repository.values.filter { it.type == Signified.Type.ADJECTIVE }.size)
+    }
+
+    @Test
+    fun testRemove_Success() {
+        val firstId = repository.add(generateEmptySignified())
+        val removedId = repository.add(generateEmptySignified())
+        val lastId = repository.add(generateEmptySignified())
+
+        repository.remove(removedId)
+
+        assertNotNull(repository[firstId])
+        assertNull(repository[removedId])
+        assertNotNull(repository[lastId])
+    }
+
+    @Test
+    fun testFind_ByTypeSuccess() {
+        addSignifiedForFindTests()
+
+        val result = repository.findByDSL {
+            type(Signified.Type.PRONOUN)
+        }
+
+        assertFalse(result.isEmpty())
+        result.forEach {
+            assertEquals(Signified.Type.PRONOUN, it.second.type)
+        }
     }
 
 }
