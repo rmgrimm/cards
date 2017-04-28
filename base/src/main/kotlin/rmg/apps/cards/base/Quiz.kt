@@ -4,8 +4,10 @@ import rmg.apps.cards.base.model.Question
 
 /**
  * Generic quiz interface
+ *
+ * @param U the type of ID for a User
  */
-interface Quiz : List<Question> {
+interface Quiz<U> : List<Question> {
     enum class State {
         /**
          * Indicates the quiz has not finished being generated yet
@@ -28,6 +30,7 @@ interface Quiz : List<Question> {
         COMPLETED
     }
 
+    val userId: U
     val state: State
 
     fun hasNextQuestion(): Boolean

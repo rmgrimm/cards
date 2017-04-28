@@ -1,12 +1,38 @@
 package rmg.apps.cards.base
 
+import rmg.apps.cards.base.model.Definition
 import rmg.apps.cards.base.model.Signified
 import rmg.apps.cards.base.model.Signifier
+import rmg.apps.cards.base.model.WrittenWord
 
 /**
  * Repository to hold [Signified]s and query against them
+ *
+ * @param T the type used as an ID for [Signified] objects held in the repository
+ * @param U the type used as an ID for users, for purposes of spaced repetition
  */
-interface SignifiedRepository<T> : MutableMap<T, Signified> {
+interface SignifiedRepository<T, in U> : MutableMap<T, Signified> {
+
+    /**
+     * Ordering options used when calling [SignifiedRepository.find]
+     */
+    enum class FindOrder {
+        /**
+         * No specific order requested
+         */
+        NONE,
+
+        /**
+         * Less known [Signified]s should be ordered before more well-known ones
+         */
+        SPACED_REPETITION,
+
+        /**
+         * Order the [Signified]s randomly
+         */
+        RANDOM
+    }
+
     /**
      * Add a new [Signified]
      *
@@ -26,78 +52,134 @@ interface SignifiedRepository<T> : MutableMap<T, Signified> {
      * Find matching [Signified] options
      *
      * @param maxResults the maximum number of results to return
-     * @param randomized whether the order should be randomized
+     * @param order how the signified should be ordered when fetching results
+     * @param user the user ID to be used for [spaced repetition][FindOrder.SPACED_REPETITION] finds
      * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
      * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
      */
-    fun find(maxResults: Int? = null, randomized: Boolean = false, criteria: SignifiedCriteria): List<Pair<T, Signified>>
-
-    /**
-     * Find matching [Signified] options using the builder/implicit receiver DSL
-     *
-     * @param maxResults the maximum number of results to return
-     * @param randomized whether the order should be randomized
-     * @param criteriaDsl a set of [DSL][SignifiedCriteria.AllBuilder] commands to build the criteria
-     * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
-     */
-    fun findByDSL(maxResults: Int? = null, randomized: Boolean = false, criteriaDsl: SignifiedCriteria.AllBuilder.() -> Unit): List<Pair<T, Signified>> {
-        val criteriaBuilder = SignifiedCriteria.AllBuilder()
-        criteriaBuilder.criteriaDsl()
-
-        return this.find(maxResults = maxResults, randomized = randomized, criteria = criteriaBuilder.criteria)
-    }
+    fun find(maxResults: Int? = null, order: FindOrder = FindOrder.NONE, user: U? = null, criteria: SignifiedCriteria = SignifiedCriteria.Any): List<Pair<T, Signified>>
 }
 
 /**
- * A sealed class of possible criteria for use with [SignifiedRepository.find].
+ * A sealed class of possible criteria for use with [SignifiedRepository.find] or
+ * as predicates for filtering [Signified]
  */
 sealed class SignifiedCriteria {
 
-    class AllBuilder {
-        var criteria: SignifiedCriteria = Any
+    /**
+     * A predicate for filtering in-memory [Signified] objects
+     */
+    abstract fun match(signified: Signified): Boolean
 
-        fun type(type: Signified.Type) {
-            criteria = criteria and SignifiedCriteria.Type(type)
-        }
-
-        fun writtenWord(lang: String? = null, country: String? = null, script: String? = null, weight: Int? = null) {
-            var locale: Signifier.Locale? = null
-
-            if (lang != null) {
-                locale = Signifier.Locale(lang = lang, country = country, script = script)
-            }
-
-            criteria = criteria and WrittenWordSignifier(locale, weight)
-        }
+    /**
+     * Criteria to match any [Signified]
+     */
+    object Any : SignifiedCriteria() {
+        override fun match(signified: Signified) = true
     }
 
     /**
-     *  Criteria to select any signified
+     * Criteria to match no [Signified]
      */
-    object Any : SignifiedCriteria()
+    object None : SignifiedCriteria() {
+        override fun match(signified: Signified) = false
+    }
 
     /**
      * Criteria to select based upon [Signified.type]
      */
-    data class Type(val type: Signified.Type) : SignifiedCriteria()
+    data class Type(val type: Signified.Type) : SignifiedCriteria() {
+        override fun match(signified: Signified) = signified.type == this.type
+    }
 
     /**
-     * Criteria to select [Signified] based upon the existence of contained [WrittenWordSignifier]
-     *
-     * Possible to further filter based [weight][WrittenWordSignifier.weight] or [locale][WrittenWordSignifier.locale].
-     *
-     * @param locale optional filter for the [Signifier.Locale] that causes a [WrittenWordSignifier] to match
-     * @param weight optional filter for the weight that is allowed for the [WrittenWordSignifier] to match
+     * Criteria to select based upon a [Signifier] matching the [criteria][SignifierCriteria]
      */
-    data class WrittenWordSignifier(val locale: Signifier.Locale? = null, val weight: Int? = null) : SignifiedCriteria()
+    data class ContainsSignifier(val signifierCriteria: SignifierCriteria) : SignifiedCriteria() {
+        override fun match(signified: Signified) = signified.signifiers.any{ signifierCriteria.match(it) }
+    }
 
-    data class DescriptionSignifier(val locale: Signifier.Locale? = null) : SignifiedCriteria()
     data class CompoundCriteria(val left: SignifiedCriteria, val right: SignifiedCriteria, val type: ConjunctionType) : SignifiedCriteria() {
         enum class ConjunctionType {
             AND, OR
         }
+
+        override fun match(signified: Signified) = when (type) {
+            ConjunctionType.AND -> left.match(signified) && right.match(signified)
+            ConjunctionType.OR -> left.match(signified) || right.match(signified)
+        }
+    }
+}
+
+/**
+ * A sealed class of possible criteria for filtering [Signifier]s
+ */
+sealed class SignifierCriteria {
+
+    /**
+     *  A predicate for filtering in-memory [Signifier] objects
+     */
+    abstract fun match(signifier: Signifier): Boolean
+
+    /**
+     *  Criteria to match any [Signifier]
+     */
+    object Any : SignifierCriteria() {
+        override fun match(signifier: Signifier) = true
     }
 
-    infix fun or(other: SignifiedCriteria): CompoundCriteria = CompoundCriteria(this, other, CompoundCriteria.ConjunctionType.OR)
-    infix fun and(other: SignifiedCriteria): CompoundCriteria = CompoundCriteria(this, other, CompoundCriteria.ConjunctionType.AND)
+    /**
+     * Criteria to match no [Signifier]
+     */
+    object None : SignifierCriteria() {
+        override fun match(signifier: Signifier) = false
+    }
+
+    /**
+     * Criteria to select [Signifier]s of type [WrittenWordCriteria]
+     *
+     * Possible to further filter based upon [locale][WrittenWord.locale] or [weight][WrittenWord.weight].
+     *
+     * @param locale optional filter for the [locale][Signifier.Locale] of [WrittenWord]
+     * @param weight optional filter for the [weight][WrittenWord.weight]
+     */
+    data class WrittenWordCriteria(val locale: Signifier.Locale? = null, val weight: Int? = null) : SignifierCriteria() {
+        override fun match(signifier: Signifier): Boolean {
+            if (signifier !is WrittenWord) {
+                return false
+            }
+
+            if (locale != null && locale doesntMatch signifier.locale) {
+                return false
+            }
+
+            if (weight != null && weight != signifier.weight) {
+                return false
+            }
+
+            return true
+        }
+    }
+
+    /**
+     * Criteria to select [Signifier]s of type [Definition]
+     *
+     * Possible to further fitler based upon [locale][Definition.locale]
+     *
+     * @param locale optional filter for the [locale][Signifier.Locale] of [Definition]
+     */
+    data class DefinitionCriteria(val locale: Signifier.Locale? = null) : SignifierCriteria() {
+        override fun match(signifier: Signifier): Boolean {
+            if (signifier !is Definition) {
+                return false
+            }
+
+            if (locale != null && locale doesntMatch signifier.locale) {
+                return false
+            }
+
+            return true
+        }
+    }
+
 }

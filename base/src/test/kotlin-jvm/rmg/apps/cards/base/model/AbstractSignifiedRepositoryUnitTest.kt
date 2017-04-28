@@ -4,15 +4,43 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import rmg.apps.cards.base.SignifiedRepository
+import rmg.apps.cards.base.dsl.findByAll
+import rmg.apps.cards.base.dsl.findByAny
 
 /**
  * Abstract test to facilitate correctness checking of [SignifiedRepository] subclasses
  *
  * @param I the class used to identify signified objects
+ * @param U the class used to identify users
  * @param R the repository class
  */
-abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>> {
+abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository<I, U>> {
 
+    /**
+     * Generator for a working instance of the repository
+     *
+     * @return a usable instance of the [SignifiedRepository] subclass
+     */
+    abstract fun createInstance(): R
+
+    /**
+     * Generator to return the would-be first ID of a signified
+     * contained within the repository
+     *
+     * @return the first ID
+     */
+    abstract fun getFirstId(): I
+
+    /**
+     * Generator to return the would-be user for retrieving ordered [Signified]
+     *
+     * @return a sample User ID
+     */
+    abstract fun getUserId(): U
+
+    /**
+     * The repository that is being tested
+     */
     lateinit var repository: R
 
     private fun generateEmptySignified(type: Signified.Type = Signified.Type.NOUN) = Signified(type, emptyList())
@@ -34,6 +62,7 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
         repository.addAll(
             listOf(
                 // The first several words of the HSK level 1 word list
+                // TODO(rgrimm): Think about making a builder DSL/implicit receiver for building lists like this
                 Signified(type = Signified.Type.VERB,
                     signifiers = listOf(
                         WrittenWord(lang = "zho", script = "Hans", word = "爱"),
@@ -82,53 +111,37 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
                     signifiers = listOf(
                         WrittenWord(lang = "eng", word = "I"),
                         WrittenWord(lang = "eng", word = "me"),
-                        WrittenWord(lang = "zho", script = "pinyin", word = "wo3", weight = 1)
+                        WrittenWord(lang = "zho", script = "Piny", word = "wo3", weight = 1)
                     )),
                 Signified(type = Signified.Type.DETERMINER,
                     signifiers = listOf(
                         WrittenWord(lang = "eng", word = "My"),
-                        WrittenWord(lang = "zho", script = "pinyin", word = "wo3de5", weight = 2)
+                        WrittenWord(lang = "zho", script = "Piny", word = "wo3de5", weight = 2)
                     )),
                 Signified(type = Signified.Type.PRONOUN,
                     signifiers = listOf(
                         WrittenWord(lang = "eng", word = "You"),
-                        WrittenWord(lang = "zho", script = "pinyin", word = "ni3", weight = 1)
+                        WrittenWord(lang = "zho", script = "Piny", word = "ni3", weight = 1)
                     )),
                 Signified(type = Signified.Type.DETERMINER,
                     signifiers = listOf(
                         WrittenWord(lang = "eng", word = "Your"),
-                        WrittenWord(lang = "zho", script = "pinyin", word = "ni3de5", weight = 2)
+                        WrittenWord(lang = "zho", script = "Piny", word = "ni3de5", weight = 2)
                     )),
                 Signified(type = Signified.Type.PRONOUN,
                     signifiers = listOf(
                         WrittenWord(lang = "eng", word = "He"),
                         WrittenWord(lang = "eng", word = "Him"),
-                        WrittenWord(lang = "zho", script = "pinyin", word = "ta1", weight = 1)
+                        WrittenWord(lang = "zho", script = "Piny", word = "ta1", weight = 1)
                     )),
                 Signified(type = Signified.Type.PRONOUN,
                     signifiers = listOf(
                         WrittenWord(lang = "eng", word = "She"),
                         WrittenWord(lang = "eng", word = "Her"),
-                        WrittenWord(lang = "zho", script = "pinyin", word = "ta1", weight = 1)
+                        WrittenWord(lang = "zho", script = "Piny", word = "ta1", weight = 1)
                     ))
             ))
     }
-
-
-    /**
-     * Generator for a working instance of the repository
-     *
-     * @return a usable instance of the [SignifiedRepository] subclass
-     */
-    abstract fun createInstance(): R
-
-    /**
-     * Generator to return the would-be first ID of a signified
-     * contained within the repository
-     *
-     * @return the first ID
-     */
-    abstract fun getFirstId(): I
 
     @Before
     fun setUp() {
@@ -238,6 +251,22 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
     }
 
     @Test
+    fun testGetEntries_CantChangeInternalValues() {
+        val signified = generateEmptySignified(Signified.Type.NOUN)
+        repository.add(signified)
+
+        val changeSignified = generateEmptySignified(Signified.Type.VERB)
+
+        val entries = repository.entries
+
+        entries.forEach { pair ->
+            pair.setValue(changeSignified)
+        }
+
+        assertFalse(repository.containsValue(changeSignified))
+    }
+
+    @Test
     fun testGetKeys_SuccessWithHoles() {
         val removedId = addSignifiedsWithHoles()
 
@@ -331,14 +360,47 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, R : SignifiedRepository<I>
     fun testFind_ByTypeSuccess() {
         addSignifiedForFindTests()
 
-        val result = repository.findByDSL {
-            type(Signified.Type.PRONOUN)
+        val result = repository.findByAll {
+            // Nest a few times, just because
+            all {
+                any {
+                    type(Signified.Type.PRONOUN)
+                }
+            }
         }
 
         assertFalse(result.isEmpty())
-        result.forEach {
-            assertEquals(Signified.Type.PRONOUN, it.second.type)
+        result.forEach { keyValuePair ->
+            assertEquals(Signified.Type.PRONOUN, keyValuePair.second.type)
         }
     }
 
+    @Test
+    fun testFind_ByWrittenWordSuccess() {
+        addSignifiedForFindTests()
+
+        val result = repository.findByAny {
+            all {
+                any {
+                    hasWrittenWord(lang = "zho", script = "Hans")
+                }
+            }
+        }
+
+        assertFalse(result.isEmpty())
+        result.forEach { keyValuePair ->
+            var hasMatchingSignifier = false
+            keyValuePair.second.signifiers.forEach signifierLoop@{ signifier ->
+                if (signifier !is WrittenWord) {
+                    return@signifierLoop
+                }
+
+                if (signifier.locale.lang.equals("zho", ignoreCase = true) && signifier.locale.script.equals("Hans", ignoreCase = true)) {
+                    hasMatchingSignifier = true
+                    return@signifierLoop
+                }
+            }
+            assertTrue("Signified needs to have at least one WrittenWord(lang = \"zho\", script = \"Hans\"): ${keyValuePair.second}", hasMatchingSignifier)
+        }
+    }
 }
