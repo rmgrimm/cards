@@ -1,10 +1,9 @@
 package rmg.apps.cards.base.model
 
-import org.junit.Test
-
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.ExpectedException
 
 class MultipleChoiceQuestionUnitTest {
@@ -13,15 +12,26 @@ class MultipleChoiceQuestionUnitTest {
     @JvmField
     val expectedException: ExpectedException = ExpectedException.none()
 
-    lateinit var question : MultipleChoiceQuestion
+    lateinit var question: MultipleChoiceQuestion
 
     @Before
     fun setUpQuestion() {
-        val locale = Signifier.Locale("en")
+        val locale = Signifier.Locale(lang = "eng")
         val answerOptions = (1..5).map { WrittenWord(locale, it.toString()) }
         val questionSignified = Signified(Signified.Type.NOUN, listOf(answerOptions[0]))
 
-        question = MultipleChoiceQuestion(questionSignified, answerOptions)
+        question = MultipleChoiceQuestion(questionSignified, answerOptions) { idx, correct ->
+            println("Testing answer selected; idx: $idx, correct: $correct")
+        }
+    }
+
+    @Test
+    fun testInit_NoCorrectAnswer() {
+        expectedException.expect(IllegalArgumentException::class.java)
+
+        question = MultipleChoiceQuestion(
+            Signified(Signified.Type.NOUN, listOf(WrittenWord(Signifier.Locale("eng"), "test"))),
+            emptyList())
     }
 
     @Test
@@ -39,7 +49,7 @@ class MultipleChoiceQuestionUnitTest {
     @Test
     fun testSelectedIndex_CantChangeAnswer() {
         expectedException.expect(IllegalStateException::class.java)
-        expectedException.expectMessage("Selected answer already set!")
+        expectedException.expectMessage("Selected answer already set to 0, cannot replace with 1!")
 
         question.selectedIndex = 0
         question.selectedIndex = 1

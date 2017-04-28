@@ -84,6 +84,10 @@ sealed class SignifiedCriteriaBuilder(
         }
     }
 
+    fun matches(criteria: SignifiedCriteria) {
+        addCriteria(criteria)
+    }
+
     fun all(build: All.() -> Unit) {
         val compoundBuilder = All()
         compoundBuilder.build()
@@ -100,6 +104,10 @@ sealed class SignifiedCriteriaBuilder(
 
     fun type(type: Signified.Type) {
         addCriteria(SignifiedCriteria.Type(type))
+    }
+
+    fun contains(signifierCriteria: SignifierCriteria) {
+        addCriteria(SignifiedCriteria.ContainsSignifier(signifierCriteria))
     }
 
     fun hasWrittenWord(lang: String? = null, country: String? = null, script: String? = null, weight: Int? = null) {

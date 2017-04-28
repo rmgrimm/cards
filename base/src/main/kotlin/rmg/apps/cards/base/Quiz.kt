@@ -36,3 +36,10 @@ interface Quiz<U> : List<Question> {
     fun hasNextQuestion(): Boolean
     fun nextQuestion(): Question
 }
+
+interface UserSpecificQuizGenerator<U> {
+    fun generateQuiz(user: U, quizLength: Int, questionCriteria: SignifiedCriteria, answersPerQuestion: Int, answerCriteria: SignifierCriteria): Quiz<U>
+}
+interface UserUnspecifiedQuizGenerator<U> {
+    fun generateQuiz(quizLength: Int, questionCriteria: SignifiedCriteria, answersPerQuestion: Int, answerCriteria: SignifierCriteria): Quiz<U>
+}

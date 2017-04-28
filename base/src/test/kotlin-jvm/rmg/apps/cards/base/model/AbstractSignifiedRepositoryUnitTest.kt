@@ -245,9 +245,9 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository
         val entries = repository.entries
 
         assertEquals(3, entries.size)
-        assertEquals(0, entries.filter { it.value.type == Signified.Type.ADJECTIVE }.size)
-        assertEquals(1, entries.filter { it.value.type == Signified.Type.NOUN }.size)
-        assertEquals(2, entries.filter { it.value.type == Signified.Type.VERB }.size)
+        assertEquals(0, entries.filter { (_, signified) -> signified.type == Signified.Type.ADJECTIVE }.size)
+        assertEquals(1, entries.filter { (_, signified) -> signified.type == Signified.Type.NOUN }.size)
+        assertEquals(2, entries.filter { (_, signified) -> signified.type == Signified.Type.VERB }.size)
     }
 
     @Test
@@ -370,8 +370,8 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository
         }
 
         assertFalse(result.isEmpty())
-        result.forEach { keyValuePair ->
-            assertEquals(Signified.Type.PRONOUN, keyValuePair.second.type)
+        result.forEach { (_, signified) ->
+            assertEquals(Signified.Type.PRONOUN, signified.type)
         }
     }
 
@@ -388,9 +388,9 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository
         }
 
         assertFalse(result.isEmpty())
-        result.forEach { keyValuePair ->
+        result.forEach { (_, signified) ->
             var hasMatchingSignifier = false
-            keyValuePair.second.signifiers.forEach signifierLoop@{ signifier ->
+            signified.signifiers.forEach signifierLoop@{ signifier ->
                 if (signifier !is WrittenWord) {
                     return@signifierLoop
                 }
@@ -400,7 +400,7 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository
                     return@signifierLoop
                 }
             }
-            assertTrue("Signified needs to have at least one WrittenWord(lang = \"zho\", script = \"Hans\"): ${keyValuePair.second}", hasMatchingSignifier)
+            assertTrue("Signified needs to have at least one WrittenWord(lang = \"zho\", script = \"Hans\"): ${signified}", hasMatchingSignifier)
         }
     }
 }
