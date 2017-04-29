@@ -1,25 +1,25 @@
 package rmg.apps.cards.base.model
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import rmg.apps.cards.base.SignifiedRepository
+import rmg.apps.cards.base.MutableSignifiedRepository
 import rmg.apps.cards.base.dsl.findByAll
 import rmg.apps.cards.base.dsl.findByAny
+import kotlin.test.*
 
 /**
- * Abstract test to facilitate correctness checking of [SignifiedRepository] subclasses
+ * Abstract test to facilitate correctness checking of [MutableSignifiedRepository] subclasses
  *
  * @param I the class used to identify signified objects
  * @param U the class used to identify users
  * @param R the repository class
  */
-abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository<I, U>> {
+abstract class AbstractMutableSignifiedRepositoryUnitTest<I, U, R : MutableSignifiedRepository<I, U>> {
 
     /**
      * Generator for a working instance of the repository
      *
-     * @return a usable instance of the [SignifiedRepository] subclass
+     * @return a usable instance of the [MutableSignifiedRepository] subclass
      */
     abstract fun createInstance(): R
 
@@ -400,7 +400,7 @@ abstract class AbstractSignifiedRepositoryUnitTest<I, U, R : SignifiedRepository
                     return@signifierLoop
                 }
             }
-            assertTrue("Signified needs to have at least one WrittenWord(lang = \"zho\", script = \"Hans\"): ${signified}", hasMatchingSignifier)
+            assertTrue(hasMatchingSignifier, "Signified needs to have at least one WrittenWord(lang = \"zho\", script = \"Hans\"): ${signified}")
         }
     }
 }

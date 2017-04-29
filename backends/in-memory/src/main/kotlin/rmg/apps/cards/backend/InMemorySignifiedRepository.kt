@@ -1,17 +1,18 @@
 package rmg.apps.cards.backend
 
 import rmg.apps.cards.base.SignifiedCriteria
+import rmg.apps.cards.base.MutableSignifiedRepository
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.model.Signified
 
 /**
- * [SignifiedRepository] that holds all data in memory in an [ArrayList]
+ * [MutableSignifiedRepository] that holds all data in memory in an [ArrayList]
  *
  * IDs of [Signified] will be of type [Int], to match the position within the array list.
  *
  * This will only support one user, so the user ID type is [Unit]
  */
-class InMemorySignifiedRepository : SignifiedRepository<Int, Unit> {
+class InMemorySignifiedRepository : MutableSignifiedRepository<Int, Unit> {
     data class Entry(override val key: Int, override var value: Signified) : MutableMap.MutableEntry<Int, Signified> {
         override fun setValue(newValue: Signified): Signified {
             value = newValue

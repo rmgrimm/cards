@@ -41,6 +41,7 @@ data class InMemoryQuiz(val questions: List<Question>) : Quiz<Unit>, List<Questi
 }
 
 class InMemoryQuizGenerator(val repository: InMemorySignifiedRepository) : UserUnspecifiedQuizGenerator<Unit> {
+
     override fun generateQuiz(quizLength: Int, questionCriteria: SignifiedCriteria, answersPerQuestion: Int, answerCriteria: SignifierCriteria): Quiz<Unit> {
         val questionSignifieds = repository
             .findByAll(maxResults = quizLength, order = SignifiedRepository.FindOrder.SPACED_REPETITION, user = Unit) {
@@ -49,19 +50,13 @@ class InMemoryQuizGenerator(val repository: InMemorySignifiedRepository) : UserU
             }
             .map { (_, signified) -> signified }
 
+        // TODO(rmgrimm): When other question types are available
+        val generators : List<Question.Generator<Int, Unit>> = listOf(
+            MultipleChoiceQuestion.Generator(repository, answersPerQuestion, answerCriteria)
+        )
+
         val questions = questionSignifieds.map { questionSignified ->
-            val correctAnswer = questionSignified.signifiers.filter(answerCriteria::match).first()
-
-            val possibleAnswers = listOf(correctAnswer) + repository.findByAll(maxResults = answersPerQuestion - 1, order = SignifiedRepository.FindOrder.RANDOM) {
-                // TODO(rmgrimm): add some criteria based on the question; such as "not in the questionSignifieds list"
-                contains(answerCriteria)
-            }.map { (_, signified) ->
-                signified.signifiers.filter(answerCriteria::match).first()
-            }
-
-            // TODO(rmgrimm): Randomize the order of the answer list
-
-            MultipleChoiceQuestion(questionSignified, possibleAnswers)
+            generators[0].generateQuestion(questionSignified)
         }
 
         return InMemoryQuiz(questions)

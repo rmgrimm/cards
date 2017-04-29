@@ -38,11 +38,12 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
 
-        <kotlin.version>1.1.2</kotlin.version>
+        <kotlin.version>1.1.2-2</kotlin.version>
         <kotlin-language.version>1.1</kotlin-language.version>
         <dokka.version>0.9.13</dokka.version>
 
         <junit.version>4.12</junit.version>
+        <mockito-kotlin.version>1.4.0</mockito-kotlin.version>
     </properties>
 
     <dependencyManagement>
@@ -106,6 +107,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.nhaarman</groupId>
+                <artifactId>mockito-kotlin</artifactId>
+                <version>${mockito-kotlin.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

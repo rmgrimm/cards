@@ -1,6 +1,7 @@
 package rmg.apps.cards.base.dsl
 
 import rmg.apps.cards.base.SignifiedCriteria
+import rmg.apps.cards.base.MutableSignifiedRepository
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.SignifiedRepository.FindOrder
 import rmg.apps.cards.base.SignifierCriteria
@@ -23,7 +24,7 @@ import rmg.apps.cards.base.model.Signifier
  * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
  */
 fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
-                                               order: SignifiedRepository.FindOrder = SignifiedRepository.FindOrder.NONE,
+                                               order: FindOrder = FindOrder.NONE,
                                                user: U? = null,
                                                allCriteria: SignifiedCriteriaBuilder.All.() -> Unit): List<Pair<T, Signified>> {
     val criteriaBuilder = SignifiedCriteriaBuilder.All()
@@ -48,7 +49,7 @@ fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
  * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
  */
 fun <T, U> SignifiedRepository<T, U>.findByAny(maxResults: Int? = null,
-                                               order: SignifiedRepository.FindOrder = SignifiedRepository.FindOrder.NONE,
+                                               order: FindOrder = FindOrder.NONE,
                                                user: U? = null,
                                                anyCriteria: SignifiedCriteriaBuilder.Any.() -> Unit): List<Pair<T, Signified>> {
     val criteriaBuilder = SignifiedCriteriaBuilder.Any()
@@ -67,11 +68,12 @@ sealed class SignifiedCriteriaBuilder(
 
     var criteria: SignifiedCriteria = startingCriteria
 
-    class All: SignifiedCriteriaBuilder(
+    class All : SignifiedCriteriaBuilder(
         startingCriteria = SignifiedCriteria.Any,
         conjunctionType = SignifiedCriteria.CompoundCriteria.ConjunctionType.AND
     )
-    class Any: SignifiedCriteriaBuilder(
+
+    class Any : SignifiedCriteriaBuilder(
         startingCriteria = SignifiedCriteria.None,
         conjunctionType = SignifiedCriteria.CompoundCriteria.ConjunctionType.OR
     )
@@ -84,8 +86,19 @@ sealed class SignifiedCriteriaBuilder(
         }
     }
 
+    fun equalTo(signified: Signified) {
+        addCriteria(SignifiedCriteria.EqualTo(signified))
+    }
+
     fun matches(criteria: SignifiedCriteria) {
         addCriteria(criteria)
+    }
+
+    fun not(build: All.() -> Unit) {
+        val compoundBuilder = All()
+        compoundBuilder.build()
+
+        addCriteria(SignifiedCriteria.Not(compoundBuilder.criteria))
     }
 
     fun all(build: All.() -> Unit) {

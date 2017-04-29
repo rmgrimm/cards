@@ -11,8 +11,7 @@ import rmg.apps.cards.base.model.WrittenWord
  * @param T the type used as an ID for [Signified] objects held in the repository
  * @param U the type used as an ID for users, for purposes of spaced repetition
  */
-interface SignifiedRepository<T, in U> : MutableMap<T, Signified> {
-
+interface SignifiedRepository<T, in U> : Map<T, Signified> {
     /**
      * Ordering options used when calling [SignifiedRepository.find]
      */
@@ -34,6 +33,25 @@ interface SignifiedRepository<T, in U> : MutableMap<T, Signified> {
     }
 
     /**
+     * Find matching [Signified] options
+     *
+     * @param maxResults the maximum number of results to return
+     * @param order how the signified should be ordered when fetching results
+     * @param user the user ID to be used for [spaced repetition][FindOrder.SPACED_REPETITION] finds
+     * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
+     * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
+     */
+    fun find(maxResults: Int? = null, order: SignifiedRepository.FindOrder = SignifiedRepository.FindOrder.NONE, user: U? = null, criteria: SignifiedCriteria = SignifiedCriteria.Any): List<Pair<T, Signified>>
+}
+
+/**
+ * A version of [SignifiedRepository] that allows inserting [Signified] in addition to querying
+ *
+ * @see SignifiedRepository
+ */
+interface MutableSignifiedRepository<T, in U> : MutableMap<T, Signified>, SignifiedRepository<T, U> {
+
+    /**
      * Add a new [Signified]
      *
      * @param element the new [Signified] to add
@@ -47,21 +65,10 @@ interface SignifiedRepository<T, in U> : MutableMap<T, Signified> {
      * @param elements
      */
     fun addAll(elements: Iterable<Signified>): Unit
-
-    /**
-     * Find matching [Signified] options
-     *
-     * @param maxResults the maximum number of results to return
-     * @param order how the signified should be ordered when fetching results
-     * @param user the user ID to be used for [spaced repetition][FindOrder.SPACED_REPETITION] finds
-     * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
-     * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
-     */
-    fun find(maxResults: Int? = null, order: FindOrder = FindOrder.NONE, user: U? = null, criteria: SignifiedCriteria = SignifiedCriteria.Any): List<Pair<T, Signified>>
 }
 
 /**
- * A sealed class of possible criteria for use with [SignifiedRepository.find] or
+ * A sealed class of possible criteria for use with [MutableSignifiedRepository.find] or
  * as predicates for filtering [Signified]
  */
 sealed class SignifiedCriteria {
@@ -86,6 +93,13 @@ sealed class SignifiedCriteria {
     }
 
     /**
+     * Criteria that tests equality
+     */
+    data class EqualTo(val signified: Signified) : SignifiedCriteria() {
+        override fun match(signified: Signified) = this.signified == signified
+    }
+
+    /**
      * Criteria to select based upon [Signified.type]
      */
     data class Type(val type: Signified.Type) : SignifiedCriteria() {
@@ -99,6 +113,16 @@ sealed class SignifiedCriteria {
         override fun match(signified: Signified) = signified.signifiers.any{ signifierCriteria.match(it) }
     }
 
+    /**
+     * Criteria that negates other criteria
+     */
+    data class Not(val criteria: SignifiedCriteria) : SignifiedCriteria() {
+        override fun match(signified: Signified) = !criteria.match(signified)
+    }
+
+    /**
+     * Criteria to join other criteria together
+     */
     data class CompoundCriteria(val left: SignifiedCriteria, val right: SignifiedCriteria, val type: ConjunctionType) : SignifiedCriteria() {
         enum class ConjunctionType {
             AND, OR

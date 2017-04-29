@@ -1,6 +1,6 @@
 package rmg.apps.cards.base.model
 
-import org.junit.Assert.*
+import kotlin.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

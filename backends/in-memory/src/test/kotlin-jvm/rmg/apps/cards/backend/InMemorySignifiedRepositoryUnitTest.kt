@@ -1,11 +1,11 @@
 package rmg.apps.cards.backend
 
-import rmg.apps.cards.base.model.AbstractSignifiedRepositoryUnitTest
+import rmg.apps.cards.base.model.AbstractMutableSignifiedRepositoryUnitTest
 
 /**
- * Unit tests for [InMemorySignifiedRepository] based on [AbstractSignifiedRepositoryUnitTest]
+ * Unit tests for [InMemorySignifiedRepository] based on [AbstractMutableSignifiedRepositoryUnitTest]
  */
-class InMemorySignifiedRepositoryUnitTest : AbstractSignifiedRepositoryUnitTest<Int, Unit, InMemorySignifiedRepository>() {
+class InMemorySignifiedRepositoryUnitTest : AbstractMutableSignifiedRepositoryUnitTest<Int, Unit, InMemorySignifiedRepository>() {
     override fun createInstance(): InMemorySignifiedRepository = InMemorySignifiedRepository()
     override fun getFirstId(): Int = 0
     override fun getUserId(): Unit = Unit
