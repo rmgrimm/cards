@@ -79,6 +79,11 @@ sealed class SignifiedCriteria {
     abstract fun match(signified: Signified): Boolean
 
     /**
+     * A predicate for testing the criteria
+     */
+    open fun contains(signifiedCriteria: SignifiedCriteria): Boolean = this == signifiedCriteria
+
+    /**
      * Criteria to match any [Signified]
      */
     object Any : SignifiedCriteria() {
@@ -132,6 +137,8 @@ sealed class SignifiedCriteria {
             ConjunctionType.AND -> left.match(signified) && right.match(signified)
             ConjunctionType.OR -> left.match(signified) || right.match(signified)
         }
+
+        override fun contains(signifiedCriteria: SignifiedCriteria): Boolean = this == signifiedCriteria || left.contains(signifiedCriteria) || right.contains(signifiedCriteria)
     }
 }
 

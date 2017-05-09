@@ -42,9 +42,8 @@ sealed class Signifier {
 /**
  * A written word, which [signifies][Signifier] a [thing or idea][Signified]
  */
-data class WrittenWord(val locale: Locale, val word: String, val weight: Int?) : Signifier() {
-    constructor(locale: Locale, word: String) : this(locale, word, word.length)
-    constructor(lang: String, country: String? = null, script: String? = null, word: String, weight: Int? = null) : this(Signifier.Locale(lang, country, script), word, weight)
+data class WrittenWord(val locale: Locale, val word: String, val weight: Int = word.length) : Signifier() {
+    constructor(lang: String, country: String? = null, script: String? = null, word: String, weight: Int = word.length) : this(Signifier.Locale(lang, country, script), word, weight)
 }
 
 /**
