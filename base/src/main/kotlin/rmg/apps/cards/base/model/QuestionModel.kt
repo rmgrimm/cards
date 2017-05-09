@@ -8,7 +8,7 @@ sealed class Question {
 
     interface Generator<T, in U> {
         val repository: SignifiedRepository<T, U>
-        fun generateQuestion(fromSignified: Signified): Question
+        fun generateQuestion(fromSignified: Signified, handler: (Question.() -> Unit)? = null): Question
     }
 
     /**
@@ -30,10 +30,14 @@ sealed class Question {
  * @param answerSignifiers the list of options given to the user, must contain at least one correct answer
  * @param handler a callback that will be invoked when a selection has been made
  */
-data class MultipleChoiceQuestion(val questionSignified: Signified, val answerSignifiers: List<Signifier>, private val handler: ((selectedIndex: Int, correct: Boolean) -> Unit)? = null) : Question() {
+data class MultipleChoiceQuestion(val questionSignified: Signified, val answerSignifiers: List<Signifier>, private val handler: (Question.() -> Unit)? = null) : Question() {
 
-    class Generator<T, in U>(override val repository: SignifiedRepository<T, U>, val numAnswers: Int, val answerCriteria: SignifierCriteria) : Question.Generator<T, U> {
-        override fun generateQuestion(fromSignified: Signified): Question {
+    class Generator<T, in U>(
+        override val repository: SignifiedRepository<T, U>,
+        val numAnswers: Int,
+        val answerCriteria: SignifierCriteria
+    ) : Question.Generator<T, U> {
+        override fun generateQuestion(fromSignified: Signified, handler: ((Question) -> Unit)?): Question {
             // TODO(rmgrimm): Randomize the signifier that is taken for the question's answer
             val correctAnswer = fromSignified.signifiers.filter(answerCriteria::match).also {
                 it.isNotEmpty() || throw IllegalArgumentException("Question signified does not contain any signifiers that can be used as a correct answer!")
@@ -51,7 +55,7 @@ data class MultipleChoiceQuestion(val questionSignified: Signified, val answerSi
 
             // TODO(rmgrimm): Randomize the order of the answer list
 
-            return MultipleChoiceQuestion(fromSignified, possibleAnswers)
+            return MultipleChoiceQuestion(fromSignified, possibleAnswers, handler)
         }
     }
 
@@ -69,7 +73,7 @@ data class MultipleChoiceQuestion(val questionSignified: Signified, val answerSi
 
             field = value
 
-            handler?.invoke(value, this.isCorrect!!)
+            this.handler?.invoke(this)
         }
 
     override val isAnswered

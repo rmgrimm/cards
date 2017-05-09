@@ -1,9 +1,6 @@
 package rmg.apps.cards.base.model
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.then
+import com.nhaarman.mockito_kotlin.*
 import kotlin.test.*
 import org.junit.Before
 import org.junit.Rule
@@ -27,7 +24,7 @@ class MultipleChoiceQuestionUnitTest {
     lateinit var question: MultipleChoiceQuestion
 
     @Mock
-    lateinit var handler: (selectedIndex: Int, correct: Boolean) -> Unit
+    lateinit var handler: Question.() -> Unit
 
     @Before
     fun setUpQuestion() {
@@ -56,7 +53,7 @@ class MultipleChoiceQuestionUnitTest {
     fun testIsAnswered_Answered() {
         question.selectedIndex = 0
 
-        then(handler).should().invoke(eq(0), eq(true))
+        then(handler).should().invoke(eq(question))
 
         assertTrue(question.isAnswered)
     }
@@ -73,7 +70,7 @@ class MultipleChoiceQuestionUnitTest {
     @Test
     fun testSelectedIndex_NothingSelected() {
         assertNull(question.selectedIndex)
-        then(handler).should(never()).invoke(any(), any())
+        then(handler).should(never()).invoke(any())
     }
 
     @Test

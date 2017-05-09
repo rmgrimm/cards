@@ -18,7 +18,7 @@ import kotlin.test.fail
 class MultipleChoiceQuestionGeneratorUnitTest {
 
     companion object TestData {
-        const val numAnswers = 5
+        const val NUM_ANSWERS = 5
     }
 
     @Rule
@@ -41,7 +41,7 @@ class MultipleChoiceQuestionGeneratorUnitTest {
     fun setUp() {
         generator = MultipleChoiceQuestion.Generator(
             repository = repository,
-            numAnswers = TestData.numAnswers,
+            numAnswers = NUM_ANSWERS,
             answerCriteria = answerCriteria)
     }
 
@@ -68,7 +68,7 @@ class MultipleChoiceQuestionGeneratorUnitTest {
         val containsAnswerCriteria = SignifiedCriteria.ContainsSignifier(answerCriteria)
 
         given {
-            repository.find(maxResults = eq(TestData.numAnswers - 1), order = anyOrNull(), user = anyOrNull(), criteria = argWhere {
+            repository.find(maxResults = eq(NUM_ANSWERS - 1), order = anyOrNull(), user = anyOrNull(), criteria = argWhere {
                 it.contains(containsAnswerCriteria)
             })
         } willReturn {

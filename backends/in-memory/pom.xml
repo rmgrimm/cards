@@ -57,6 +57,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.nhaarman</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -102,6 +107,7 @@
                             </sourceDirs>
                         </configuration>
                     </execution>
+                    <!-- If/when JS tests are added, reenable the following:
                     <execution>
                         <id>test-js-compile</id>
                         <phase>test-compile</phase>
@@ -115,6 +121,7 @@
                             </sourceDirs>
                         </configuration>
                     </execution>
+                    -->
                 </executions>
             </plugin>
             <plugin>

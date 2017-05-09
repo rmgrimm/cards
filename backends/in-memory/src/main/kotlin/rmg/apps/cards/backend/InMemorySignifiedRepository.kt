@@ -63,6 +63,8 @@ class InMemorySignifiedRepository : MutableSignifiedRepository<Int, Unit> {
     override fun find(maxResults: Int?, order: SignifiedRepository.FindOrder, user: Unit?, criteria: SignifiedCriteria): List<Pair<Int, Signified>> {
         val resultList = ArrayList<Pair<Int, Signified>>(maxResults ?: backingList.size)
 
+        // TODO(rmgrimm): Handle the order parameter properly
+
         for (entry in entries) {
             if (criteria.match(entry.value)) {
                 resultList.add(entry.toPair())

@@ -7,6 +7,38 @@ import rmg.apps.cards.base.model.Question
 
 data class InMemoryQuiz(val questions: List<Question>) : Quiz<Unit>, List<Question> by questions {
 
+    class Generator(
+        val repository: InMemorySignifiedRepository,
+        // TODO(rmgrimm): When other question types are available, add them
+        val generators : List<Question.Generator<Int, Unit>> = listOf(
+            MultipleChoiceQuestion.Generator(repository, InMemoryQuiz.Generator.DEFAULT_NUM_ANSWERS, InMemoryQuiz.Generator.DEFAULT_ANSWER_CRITERIA)
+        )
+    ) : Quiz.UserUnspecifiedGenerator<Unit> {
+
+        companion object Defaults {
+            const val DEFAULT_NUM_ANSWERS = 6
+            val DEFAULT_ANSWER_CRITERIA = SignifierCriteria.Any
+        }
+
+        override fun generateQuiz(quizLength: Int, questionCriteria: SignifiedCriteria, correctAnswerCriteria: SignifierCriteria): Quiz<Unit> {
+            val questionSignifieds = repository
+                .findByAll(maxResults = quizLength, order = SignifiedRepository.FindOrder.SPACED_REPETITION, user = Unit) {
+                    matches(questionCriteria)
+                    contains(correctAnswerCriteria)
+                }
+                .map { (_, signified) -> signified }
+
+            val questions = questionSignifieds.mapIndexed { _, questionSignified ->
+                // TODO(rmgrimm): Use a random generator to generate the question
+                generators[0].generateQuestion(questionSignified) {
+                    // TODO(rmgrimm): Do something with the handler? Possibly with the index of the question?
+                }
+            }
+
+            return InMemoryQuiz(questions)
+        }
+    }
+
     init {
         if (questions.isEmpty()) {
             throw IllegalArgumentException("InMemoryQuiz must have questions")
@@ -39,28 +71,3 @@ data class InMemoryQuiz(val questions: List<Question>) : Quiz<Unit>, List<Questi
         return questionIterator.next()
     }
 }
-
-class InMemoryQuizGenerator(val repository: InMemorySignifiedRepository) : UserUnspecifiedQuizGenerator<Unit> {
-
-    override fun generateQuiz(quizLength: Int, questionCriteria: SignifiedCriteria, answersPerQuestion: Int, answerCriteria: SignifierCriteria): Quiz<Unit> {
-        val questionSignifieds = repository
-            .findByAll(maxResults = quizLength, order = SignifiedRepository.FindOrder.SPACED_REPETITION, user = Unit) {
-                matches(questionCriteria)
-                contains(answerCriteria)
-            }
-            .map { (_, signified) -> signified }
-
-        // TODO(rmgrimm): When other question types are available
-        val generators : List<Question.Generator<Int, Unit>> = listOf(
-            MultipleChoiceQuestion.Generator(repository, answersPerQuestion, answerCriteria)
-        )
-
-        val questions = questionSignifieds.map { questionSignified ->
-            generators[0].generateQuestion(questionSignified)
-        }
-
-        return InMemoryQuiz(questions)
-    }
-
-}
-
