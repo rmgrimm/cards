@@ -35,14 +35,19 @@
 
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
 
         <kotlin.version>1.1.2-2</kotlin.version>
         <kotlin-language.version>1.1</kotlin-language.version>
+        <spek.version>1.1.1</spek.version>
         <dokka.version>0.9.13</dokka.version>
 
-        <junit.version>4.12</junit.version>
+        <junit-platform.version>1.0.0-M4</junit-platform.version>
+        <junit-jupiter-engine.version>5.0.0-M4</junit-jupiter-engine.version>
+        <junit-vintage-engine.version>4.12.0-M4</junit-vintage-engine.version>
+        <junit4.version>4.12</junit4.version>
         <mockito-kotlin.version>1.4.0</mockito-kotlin.version>
     </properties>
 
@@ -109,9 +114,33 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.jetbrains.spek</groupId>
+                <artifactId>spek-api</artifactId>
+                <version>${spek.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.spek</groupId>
+                <artifactId>spek-junit-platform-engine</artifactId>
+                <version>${spek.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
+                <version>${junit4.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -122,7 +151,7 @@
                 <exclusions>
                     <exclusion>
                         <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-reflect</artifactId>
+                        <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -161,6 +190,41 @@
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-surefire-provider</artifactId>
+                            <version>${junit-platform.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.jetbrains.spek</groupId>
+                            <artifactId>spek-junit-platform-engine</artifactId>
+                            <version>${spek.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                            <version>${junit-jupiter-engine.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.vintage</groupId>
+                            <artifactId>junit-vintage-engine</artifactId>
+                            <version>${junit-vintage-engine.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <includes>
+                            <include>*UnitTest</include>
+                            <include>*Spec</include>
+                        </includes>
+                        <excludes>
+                            <exclude>Abstract*</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>

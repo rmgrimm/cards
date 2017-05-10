@@ -39,6 +39,12 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <!-- currently only needed by testing frameworks -->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-js</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -50,6 +56,16 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-js</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.spek</groupId>
+            <artifactId>spek-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.spek</groupId>
+            <artifactId>spek-junit-platform-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -107,7 +123,7 @@
                             </sourceDirs>
                         </configuration>
                     </execution>
-                    <!-- If/when JS tests are added, reenable the following:
+                    <!-- If/when JS tests are added, re-enable the following:
                     <execution>
                         <id>test-js-compile</id>
                         <phase>test-compile</phase>

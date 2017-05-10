@@ -1,6 +1,7 @@
 package rmg.apps.cards.base.model
 
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import rmg.apps.cards.base.MutableSignifiedRepository
 import rmg.apps.cards.base.dsl.findByAll
@@ -14,6 +15,7 @@ import kotlin.test.*
  * @param U the class used to identify users
  * @param R the repository class
  */
+@Ignore("Abstract test to be used as base for other tests")
 abstract class AbstractMutableSignifiedRepositoryUnitTest<I, U, R : MutableSignifiedRepository<I, U>> {
 
     /**
