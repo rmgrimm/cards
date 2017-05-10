@@ -127,6 +127,18 @@
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.spek</groupId>
+                <artifactId>spek-subject-extension</artifactId>
+                <version>${spek.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.spek</groupId>
                 <artifactId>spek-junit-platform-engine</artifactId>
                 <version>${spek.version}</version>
                 <scope>test</scope>
