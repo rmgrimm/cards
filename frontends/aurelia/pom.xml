@@ -103,7 +103,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>kotlin-stdlib-js,cards-base</includeArtifactIds>
+                            <includeArtifactIds>kotlin-stdlib-js,cards-base,cards-backend-in-memory</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/js</outputDirectory>
                             <includes>**\/*.js</includes>
                             <!-- don't need .meta.js in runtime -->
