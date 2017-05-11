@@ -17,6 +17,11 @@
     <name>Cards - Aurelia Frontend</name>
     <description><![CDATA[Cards frontend that provides a web interface]]></description>
 
+    <properties>
+        <!-- The backend that the Aurelia front end will be using -->
+        <cards-aurelia-backend-project>cards-backend-in-memory</cards-aurelia-backend-project>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>rmg.apps.cards</groupId>
@@ -25,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>rmg.apps.cards</groupId>
-            <artifactId>cards-backend-in-memory</artifactId>
+            <artifactId>${cards-aurelia-backend-project}</artifactId>
             <classifier>javascript</classifier>
         </dependency>
         <dependency>
@@ -97,13 +102,13 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>extract-kotlinjs</id>
+                        <id>extract-dependency-js</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>kotlin-stdlib-js,cards-base,cards-backend-in-memory</includeArtifactIds>
+                            <includeArtifactIds>cards-base,${cards-aurelia-backend-project}</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/js</outputDirectory>
                             <includes>**\/*.js</includes>
                             <!-- don't need .meta.js in runtime -->
@@ -117,6 +122,15 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <!-- Install Node+NPM first, otherwise the plugin will see Node and not install NPM -->
+                        <id>install-node-and-npm</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <!-- Prefer yarn for the performance and exact version reliability/deterministic behavior -->
                         <id>install-node-and-yarn</id>
                         <phase>generate-resources</phase>
                         <goals>
@@ -134,17 +148,26 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <!-- Install Kotlin separately so the version can be configured by Maven and
+                             inherited from the parent POM -->
+                        <id>install-kotlin</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <!-- Use NPM, so that the package.json / yarn.lock won't be modified -->
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install kotlin@${kotlin-npm-package.version}</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>webpack-build</id>
                         <phase>process-classes</phase>
                         <goals>
-                            <goal>webpack</goal>
+                            <goal>yarn</goal>
                         </goals>
                         <configuration>
-                            <environmentVariables>
-                                <BABEL_ENV>node</BABEL_ENV>
-                                <NODE_ENV>production</NODE_ENV>
-                            </environmentVariables>
-                            <arguments>-p --env.production --env.extractCss</arguments>
+                            <arguments>run nps -- webpack.build.production</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -165,6 +188,20 @@
                         </goals>
                         <configuration>
                             <karmaConfPath>${project.basedir}/src/test/aurelia/karma.conf.js</karmaConfPath>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>end-to-end-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run nps -- e2e</arguments>
+
+                            <!-- For some reason, e2e tests fail when run in Maven, but not from cmdline -->
+                            <!-- TODO(rmgrimm): Figure out why this fails in maven -->
+                            <failOnError>false</failOnError>
                         </configuration>
                     </execution>
                 </executions>

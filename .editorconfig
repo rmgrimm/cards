@@ -11,11 +11,19 @@ end_of_line = lf
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.kt]
-indent_size = 4
-
+# Defaults by file type
 [*.xml]
 indent_size = 2
 
+[*.kt]
+indent_size = 4
+
+[*.html]
+indent_size = 2
+
+[*.js{,on}]
+indent_size = 2
+
+# Specific files
 [pom.xml]
 indent_size = 4

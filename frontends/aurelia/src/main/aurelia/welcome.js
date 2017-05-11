@@ -1,5 +1,4 @@
 //import {computedFrom} from 'aurelia-framework';
-import {RmgQuiz} from "cards-frontend-aurelia";
 
 export class Welcome {
   heading = 'Welcome to the Aurelia Navigation App';

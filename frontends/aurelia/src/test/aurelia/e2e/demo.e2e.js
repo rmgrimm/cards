@@ -2,7 +2,7 @@ import {PageObjectWelcome} from "./welcome.po";
 import {PageObjectSkeleton} from "./skeleton.po";
 import {config} from "../protractor.conf";
 
-describe('aurelia skeleton app', function() {
+describe('cards app', function() {
   let poWelcome;
   let poSkeleton;
 
@@ -14,14 +14,16 @@ describe('aurelia skeleton app', function() {
   });
 
   it('should load the page and display the initial page title', async () => {
-    await expect(poSkeleton.getCurrentPageTitle()).toBe('Welcome | Aurelia');
+    await expect(poSkeleton.getCurrentPageTitle()).toBe('Word List | Cards');
   });
 
-  it('should display greeting', async () => {
+  it('should navigate to welcome page', async () => {
+    await poSkeleton.navigateTo('#/welcome');
     await expect(poWelcome.getGreeting()).toBe('Welcome to the Aurelia Navigation App');
   });
 
   it('should automatically write down the fullname', async () => {
+    await poSkeleton.navigateTo('#/welcome');
     await poWelcome.setFirstname('John');
     await poWelcome.setLastname('Doe');
 
@@ -35,11 +37,12 @@ describe('aurelia skeleton app', function() {
   });
 
   it('should show alert message when clicking submit button', async () => {
+    await poSkeleton.navigateTo('#/welcome');
     await expect(poWelcome.openAlertDialog()).toBe(true);
   });
 
   it('should navigate to users page', async () => {
     await poSkeleton.navigateTo('#/users');
-    await expect(poSkeleton.getCurrentPageTitle()).toBe('Github Users | Aurelia');
+    await expect(poSkeleton.getCurrentPageTitle()).toBe('Github Users | Cards');
   });
 });

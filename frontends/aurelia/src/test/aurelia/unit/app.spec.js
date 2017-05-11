@@ -27,18 +27,15 @@ describe('the App module', () => {
   });
 
   it('configures the router title', () => {
-    expect(sut.router.title).toEqual('Aurelia');
+    expect(sut.router.title).toEqual('Cards');
   });
 
-  it('should have a welcome route', () => {
-    expect(sut.router.routes).toContainEqual({ route: ['', 'welcome'], name: 'welcome',  moduleId: './welcome', nav: true, title: 'Welcome' });
+  it('should have a signifier list route', () => {
+    expect(sut.router.routes).toContainEqual({ route: ['', 'word-list'], name: 'signified-list',  moduleId: './signified-list', nav: true, title: 'Word List' });
   });
 
-  it('should have a users route', () => {
-    expect(sut.router.routes).toContainEqual({ route: 'users', name: 'users', moduleId: './users', nav: true, title: 'Github Users' });
+  it('should have a quiz route', () => {
+    expect(sut.router.routes).toContainEqual({ route: 'start-quiz', name: 'start-quiz', moduleId: './start-quiz', nav: true, title: 'Start Quiz' });
   });
 
-  it('should have a child router route', () => {
-    expect(sut.router.routes).toContainEqual({ route: 'child-router', name: 'child-router', moduleId: './child-router', nav: true, title: 'Child Router' });
-  });
 });

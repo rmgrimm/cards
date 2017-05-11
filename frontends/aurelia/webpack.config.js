@@ -11,7 +11,7 @@ const when = (condition, config, negativeConfig) =>
   condition ? ensureArray(config) : ensureArray(negativeConfig);
 
 // primary config:
-const title = 'Cards Aurelia Frontend';
+const title = 'Cards';
 const outDir = path.resolve(__dirname, 'target/dist');
 const libDir = path.resolve(__dirname, "target/js");
 const srcDir = path.resolve(__dirname, 'src/main/aurelia');
@@ -33,7 +33,8 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
   },
   entry: {
     app: ['aurelia-bootstrapper'],
-    vendor: ['bluebird', 'jquery', 'bootstrap', 'kotlin'],
+    vendor: ['bluebird', 'jquery', 'bootstrap'],
+    // kotlin: ['kotlin']
   },
   output: {
     path: outDir,
