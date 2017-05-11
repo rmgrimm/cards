@@ -8,19 +8,16 @@
         <groupId>rmg.apps.cards</groupId>
         <artifactId>cards-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>parent</relativePath>
+        <relativePath>../parent</relativePath>
     </parent>
 
-    <artifactId>cards-root</artifactId>
+    <artifactId>cards-frontends</artifactId>
     <packaging>pom</packaging>
 
-    <name>Cards - Top Level Maven Project</name>
-    <description><![CDATA[Maven POM for aggregation of the submodules]]></description>
+    <name>Cards - Frontends Maven Project</name>
+    <description><![CDATA[Maven POM for aggregation of the frontend modules]]></description>
 
     <modules>
-        <module>parent</module>
-        <module>base</module>
-        <module>backends</module>
-        <module>frontends</module>
+        <module>aurelia</module>
     </modules>
 </project>

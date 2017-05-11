@@ -39,11 +39,16 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
 
-        <kotlin.version>1.1.2-2</kotlin.version>
+        <kotlin.version>1.1.2-3</kotlin.version>
         <kotlin-language.version>1.1</kotlin-language.version>
-        <spek.version>1.1.1</spek.version>
+
+        <frontend-maven-plugin.version>1.4</frontend-maven-plugin.version>
+        <node.version>v6.10.3</node.version>
+        <yarn.version>v0.23.4</yarn.version>
+
         <dokka.version>0.9.13</dokka.version>
 
+        <spek.version>1.1.1</spek.version>
         <junit-platform.version>1.0.0-M4</junit-platform.version>
         <junit-jupiter-engine.version>5.0.0-M4</junit-jupiter-engine.version>
         <junit-vintage-engine.version>4.12.0-M4</junit-vintage-engine.version>
@@ -191,7 +196,17 @@
                         <jvmTarget>1.6</jvmTarget>
 
                         <!-- JavaScript specific -->
+                        <sourceMap>true</sourceMap>
                         <moduleKind>umd</moduleKind>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
+                    <configuration>
+                        <nodeVersion>${node.version}</nodeVersion>
+                        <yarnVersion>${yarn.version}</yarnVersion>
                     </configuration>
                 </plugin>
                 <plugin>

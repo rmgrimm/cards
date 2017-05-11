@@ -6,14 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="aurelia" />
         <module name="cards-backend-in-memory" />
         <module name="cards-base" />
+        <module name="cards-frontend-aurelia" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="aurelia" target="1.5" />
       <module name="cards-backend-in-memory" target="1.5" />
       <module name="cards-backends" target="1.5" />
       <module name="cards-base" target="1.5" />
+      <module name="cards-frontend-aurelia" target="1.5" />
+      <module name="cards-frontends" target="1.5" />
       <module name="cards-parent" target="1.5" />
       <module name="cards-root" target="1.5" />
     </bytecodeTargetLevel>
