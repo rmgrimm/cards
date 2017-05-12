@@ -14,15 +14,13 @@ val signifiedRepository = InMemorySignifiedRepository {
     }
     signified {
         type(Signified.Type.NUMERAL)
-        writtenWord(lang = "zho", script = "Hans", word = "八")
-        writtenWord(lang = "zho", script = "Hant", word = "八")
+        writtenWord(lang = "zho", word = "八")
         writtenWord(lang = "zho", script = "Piny", word = "ba1", weight = 1)
         writtenWord(lang = "eng", word = "eight")
     }
     signified {
         type(Signified.Type.NOUN)
-        writtenWord(lang = "zho", script = "Hans", word = "爸爸")
-        writtenWord(lang = "zho", script = "Hant", word = "爸爸")
+        writtenWord(lang = "zho", word = "爸爸")
         writtenWord(lang = "zho", script = "Piny", word = "ba4ba5", weight = 2)
         writtenWord(lang = "eng", word = "father")
     }
