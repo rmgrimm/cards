@@ -32,16 +32,19 @@
       </table>
     </div>
     -->
-    <div class="panel panel-default" repeat.for="signifiedTuple of currentPage.array | sort:id:ascending">
-      <div class="panel-heading">
-        <h3>${signifiedTuple.id}</h3> <h5>${signifiedTuple.signified.signifiers.get(0).word}</h5>
+    <div class="container-fluid row">
+      <div class="panel panel-default" repeat.for="signifiedTuple of currentPage.array | sort:id:ascending">
+        <div class="panel-heading">
+          <h2 style="display: inline-block">${signifiedTuple.id}</h2>
+          <h5 style="display: inline-block">${signifiedTuple.signified.type}</h5>
+        </div>
+        <table class="table table-striped table-hover">
+          <tr class="row" repeat.for="locale of displayLocales | availableLocaleWordFilter:signifiedTuple.signified">
+            <td class="col-md-2">${locale | localeDisplayName}</td>
+            <td class="col-md-10">${signifiedTuple.signified | writtenWordByLocale:locale}</td>
+          </tr>
+        </table>
       </div>
-      <table class="table">
-        <tr class="row" repeat.for="locale of displayLocales | availableLocaleWordFilter:signifiedTuple.signified">
-          <td class="col-md-2">${locale | localeDisplayName}</td>
-          <td class="col-md-5">${signifiedTuple.signified | writtenWordByLocale:locale}</td>
-        </tr>
-      </table>
     </div>
   </section>
 </template>
