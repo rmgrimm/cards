@@ -35,7 +35,7 @@ class MultipleChoiceQuestionGeneratorUnitTest {
     @Mock
     lateinit var repository: SignifiedRepository<Int, Unit>
 
-    val answerCriteria: SignifierCriteria = SignifierCriteria.WrittenWordCriteria(locale = Signifier.Locale("eng"))
+    val answerCriteria: SignifierCriteria = SignifierCriteria.WrittenWordCriteria(locale = Locale("eng"))
 
     @Before
     fun setUp() {

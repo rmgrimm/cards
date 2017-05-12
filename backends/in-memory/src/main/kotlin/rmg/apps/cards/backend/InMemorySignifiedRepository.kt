@@ -7,8 +7,8 @@ import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.dsl.SignifiedListBuilder
 import rmg.apps.cards.base.dsl.addAll
 import rmg.apps.cards.base.model.Definition
+import rmg.apps.cards.base.model.Locale
 import rmg.apps.cards.base.model.Signified
-import rmg.apps.cards.base.model.Signifier
 import rmg.apps.cards.base.model.WrittenWord
 
 /**
@@ -70,9 +70,9 @@ class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int
     override fun putAll(from: Map<out Int, Signified>) = from.forEach { (key, value) -> internalPut(key, value) }
     override fun remove(key: Int): Signified? = internalPut(key, null)
 
-    override val locales: Set<Signifier.Locale>
+    override val locales: Set<Locale>
         get() {
-            val output = HashSet<Signifier.Locale>()
+            val output = HashSet<Locale>()
             backingList.forEach {
                 it?.signifiers?.forEach {
                     when(it) {

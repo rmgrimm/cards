@@ -1,7 +1,9 @@
 package rmg.apps.cards.base.model
 
-import com.nhaarman.mockito_kotlin.*
-import kotlin.test.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.then
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -9,6 +11,9 @@ import org.junit.rules.ExpectedException
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import org.mockito.quality.Strictness
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class MultipleChoiceQuestionUnitTest {
 
@@ -28,7 +33,7 @@ class MultipleChoiceQuestionUnitTest {
 
     @Before
     fun setUpQuestion() {
-        val locale = Signifier.Locale(lang = "eng")
+        val locale = Locale(lang = "eng")
         val answerOptions = (1..5).map { WrittenWord(locale, it.toString()) }
         val questionSignified = Signified(Signified.Type.NOUN, listOf(answerOptions[0]))
 
@@ -40,7 +45,7 @@ class MultipleChoiceQuestionUnitTest {
         expectedException.expect(IllegalArgumentException::class.java)
 
         question = MultipleChoiceQuestion(
-            Signified(Signified.Type.NOUN, listOf(WrittenWord(Signifier.Locale("eng"), "test"))),
+            Signified(Signified.Type.NOUN, listOf(WrittenWord(Locale("eng"), "test"))),
             emptyList())
     }
 

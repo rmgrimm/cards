@@ -3,11 +3,14 @@ package rmg.apps.cards.base.model
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.SignifierCriteria
 import rmg.apps.cards.base.dsl.findByAll
+import kotlin.js.JsName
 
 sealed class Question {
 
     interface Generator<T, in U> {
         val repository: SignifiedRepository<T, U>
+
+        @JsName("generateQuestion")
         fun generateQuestion(fromSignified: Signified, handler: (Question.() -> Unit)? = null): Question
     }
 

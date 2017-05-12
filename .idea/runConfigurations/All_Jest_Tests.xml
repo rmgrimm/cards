@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All Jest Tests" type="JavaScriptTestRunnerJest" factoryName="Jest">
+    <node-interpreter value="project" />
+    <working-dir value="$PROJECT_DIR$/frontends/aurelia" />
+    <envs>
+      <env name="BABEL_TARGET" value="node" />
+    </envs>
+    <scope-kind value="ALL" />
+    <method>
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/frontends/aurelia/pom.xml" goal="compile" />
+    </method>
+  </configuration>
+</component>

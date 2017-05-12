@@ -1,9 +1,7 @@
 package rmg.apps.cards.base
 
-import rmg.apps.cards.base.model.Definition
-import rmg.apps.cards.base.model.Signified
-import rmg.apps.cards.base.model.Signifier
-import rmg.apps.cards.base.model.WrittenWord
+import rmg.apps.cards.base.model.*
+import kotlin.js.JsName
 
 /**
  * Repository to hold [Signified]s and query against them
@@ -41,12 +39,12 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
     /**
      * All available locales within the repository
      */
-    val locales: Set<Signifier.Locale>
+    val locales: Set<Locale>
 
     /**
      * All available locales as an array to facilitate usage in JS
      */
-    val localeArray: Array<Signifier.Locale>
+    val localeArray: Array<Locale>
         get() = locales.toTypedArray()
 
     /**
@@ -58,6 +56,7 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
      * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
      * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
      */
+    @JsName("find")
     fun find(maxResults: Int? = null,
              order: FindOrder = FindOrder.NONE,
              user: U? = null,
@@ -72,6 +71,7 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
      * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
      * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
      */
+    @JsName("findPagedArray")
     fun findPagedArray(resultsPerPage: Int,
                        maxResults: Int? = null,
                        order: FindOrder = FindOrder.NONE,
@@ -206,10 +206,10 @@ sealed class SignifierCriteria {
      *
      * Possible to further filter based upon [locale][WrittenWord.locale] or [weight][WrittenWord.weight].
      *
-     * @param locale optional filter for the [locale][Signifier.Locale] of [WrittenWord]
+     * @param locale optional filter for the [locale][Locale] of [WrittenWord]
      * @param weight optional filter for the [weight][WrittenWord.weight]
      */
-    data class WrittenWordCriteria(val locale: Signifier.Locale? = null, val weight: Int? = null) : SignifierCriteria() {
+    data class WrittenWordCriteria(val locale: Locale? = null, val weight: Int? = null) : SignifierCriteria() {
         override fun match(signifier: Signifier): Boolean {
             if (signifier !is WrittenWord) {
                 return false
@@ -232,9 +232,9 @@ sealed class SignifierCriteria {
      *
      * Possible to further fitler based upon [locale][Definition.locale]
      *
-     * @param locale optional filter for the [locale][Signifier.Locale] of [Definition]
+     * @param locale optional filter for the [locale][Locale] of [Definition]
      */
-    data class DefinitionCriteria(val locale: Signifier.Locale? = null) : SignifierCriteria() {
+    data class DefinitionCriteria(val locale: Locale? = null) : SignifierCriteria() {
         override fun match(signifier: Signifier): Boolean {
             if (signifier !is Definition) {
                 return false

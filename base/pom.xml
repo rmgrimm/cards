@@ -71,7 +71,7 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 
         <plugins>
@@ -80,7 +80,7 @@
                 <executions>
                     <execution>
                         <id>default-compile</id>
-                        <phase>none</phase>
+                        <phase>compile</phase>
                     </execution>
                     <execution>
                         <id>default-testCompile</id>
@@ -94,13 +94,18 @@
                 <executions>
                     <execution>
                         <id>compile-jvm</id>
+                        <!--
+                        Kotlin warns that Kotlin code should compile prior to Java code so that the Kotlin classes
+                        will be visible to Java. The intent here is for the opposite, so suppress this warning
+                        -->
+                        <!--suppress KotlinMavenPluginPhase -->
                         <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.build.sourceDirectory}</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                                 <sourceDir>${project.basedir}/src/main/kotlin-jvm</sourceDir>
                             </sourceDirs>
                         </configuration>
@@ -109,11 +114,16 @@
                         <id>compile-js</id>
                         <phase>compile</phase>
                         <goals>
+                            <!--
+                            Kotlin warns that JS compilation is enabled for a project with Java files, but care
+                            has been taken to ensure that this doesn't cause a problem; hence, suppressing this warning
+                            -->
+                            <!--suppress KotlinMavenPluginPhase -->
                             <goal>js</goal>
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.build.sourceDirectory}</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                                 <sourceDir>${project.basedir}/src/main/kotlin-js</sourceDir>
                             </sourceDirs>
                         </configuration>
@@ -156,6 +166,11 @@
                     <includes>
                         <include>${project.basedir}/src/main/dokka/Module.md</include>
                     </includes>
+                    <sourceDirectories>
+                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+                        <sourceDirectory>${project.basedir}/src/main/kotlin-jvm</sourceDirectory>
+                    </sourceDirectories>
                 </configuration>
                 <executions>
                     <execution>

@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 object MultipleChoiceQuestionSpec: SubjectSpek<MultipleChoiceQuestion>({
     describe("a multiple choice question") {
-        val locale = Signifier.Locale(lang = "eng")
+        val locale = Locale(lang = "eng")
         val answerOptions = (1..5).map { WrittenWord(locale, it.toString()) }
         val correctAnswerIndex = 0
         val incorrectAnswerIndex = 1

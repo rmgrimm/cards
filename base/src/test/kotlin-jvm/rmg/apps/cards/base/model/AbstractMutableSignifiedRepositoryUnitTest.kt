@@ -363,10 +363,10 @@ abstract class AbstractMutableSignifiedRepositoryUnitTest<I, U, R : MutableSigni
         val locales = repository.locales
 
         assertEquals(4, locales.size)
-        assertTrue(locales.contains(Signifier.Locale(lang = "eng")))
-        assertTrue(locales.contains(Signifier.Locale(lang = "zho", script = "Hans")))
-        assertTrue(locales.contains(Signifier.Locale(lang = "zho", script = "Hant")))
-        assertTrue(locales.contains(Signifier.Locale(lang = "zho", script = "Piny")))
+        assertTrue(locales.contains(Locale(lang = "eng")))
+        assertTrue(locales.contains(Locale(lang = "zho", script = "Hans")))
+        assertTrue(locales.contains(Locale(lang = "zho", script = "Hant")))
+        assertTrue(locales.contains(Locale(lang = "zho", script = "Piny")))
     }
 
     @Test

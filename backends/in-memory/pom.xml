@@ -171,6 +171,10 @@
                     <includes>
                         <include>${project.basedir}/src/main/dokka/Module.md</include>
                     </includes>
+                    <sourceDirectories>
+                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                        <sourceDirectory>${project.basedir}/src/main/kotlin-jvm</sourceDirectory>
+                    </sourceDirectories>
                 </configuration>
                 <executions>
                     <execution>

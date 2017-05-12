@@ -4,8 +4,8 @@ import rmg.apps.cards.base.SignifiedCriteria
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.SignifiedRepository.FindOrder
 import rmg.apps.cards.base.SignifierCriteria
+import rmg.apps.cards.base.model.Locale
 import rmg.apps.cards.base.model.Signified
-import rmg.apps.cards.base.model.Signifier
 
 /**
  * Find matching [Signified] options that match **all** of the supplied criteria
@@ -122,22 +122,22 @@ sealed class SignifiedCriteriaBuilder(
         addCriteria(SignifiedCriteria.ContainsSignifier(signifierCriteria))
     }
 
-    fun hasWrittenWord(locale: Signifier.Locale? = null, weight: Int? = null) {
+    fun hasWrittenWord(locale: Locale? = null, weight: Int? = null) {
         addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale, weight)))
     }
 
     fun hasWrittenWord(lang: String, country: String? = null, script: String? = null, weight: Int? = null) {
-        val locale = Signifier.Locale(lang = lang, country = country, script = script)
+        val locale = Locale(lang = lang, country = country, script = script)
 
         addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale, weight)))
     }
 
-    fun hasDefinition(locale: Signifier.Locale? = null) {
+    fun hasDefinition(locale: Locale? = null) {
         addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.DefinitionCriteria(locale)))
     }
 
     fun hasDefinition(lang: String, country: String? = null, script: String? = null) {
-        val locale = Signifier.Locale(lang = lang, country = country, script = script)
+        val locale = Locale(lang = lang, country = country, script = script)
 
         addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.DefinitionCriteria(locale)))
     }

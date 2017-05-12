@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Unit Tests" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="All Unit Tests (no build error check)" type="JUnit" factoryName="JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
         <option name="PATTERN" value="rmg.apps.cards.*" />
@@ -25,6 +25,9 @@
     <patterns>
       <pattern testClass="rmg.*UnitTest" />
     </patterns>
-    <method />
+    <method>
+      <option name="Make" enabled="false" />
+      <option name="MakeNoErrorCheck" enabled="true" />
+    </method>
   </configuration>
 </component>
