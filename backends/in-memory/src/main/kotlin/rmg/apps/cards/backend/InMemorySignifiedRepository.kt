@@ -1,6 +1,7 @@
 package rmg.apps.cards.backend
 
 import rmg.apps.cards.base.MutableSignifiedRepository
+import rmg.apps.cards.base.PagedArray
 import rmg.apps.cards.base.SignifiedCriteria
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.dsl.SignifiedListBuilder
@@ -17,8 +18,7 @@ import rmg.apps.cards.base.model.WrittenWord
  *
  * This will only support one user, so the user ID type is [Unit]
  */
-open class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int, Unit> {
-
+class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int, Unit> {
     constructor(elements: SignifiedListBuilder.() -> Unit): this() {
         addAll(elements)
     }
@@ -67,7 +67,7 @@ open class InMemorySignifiedRepository constructor() : MutableSignifiedRepositor
     }
 
     override fun put(key: Int, value: Signified): Signified? = internalPut(key, value)
-    override fun putAll(from: Map<out Int, Signified>) = from.forEach { internalPut(it.key, it.value) }
+    override fun putAll(from: Map<out Int, Signified>) = from.forEach { (key, value) -> internalPut(key, value) }
     override fun remove(key: Int): Signified? = internalPut(key, null)
 
     override val locales: Set<Signifier.Locale>
@@ -85,14 +85,17 @@ open class InMemorySignifiedRepository constructor() : MutableSignifiedRepositor
             return output
         }
 
-    override fun find(maxResults: Int?, order: SignifiedRepository.FindOrder, user: Unit?, criteria: SignifiedCriteria): List<SignifiedRepository.StoredSignified<Int>> {
+    override fun find(maxResults: Int?,
+                      order: SignifiedRepository.FindOrder,
+                      user: Unit?,
+                      criteria: SignifiedCriteria): List<SignifiedRepository.StoredSignified<Int>> {
         val resultList = ArrayList<SignifiedRepository.StoredSignified<Int>>(maxResults ?: backingList.size)
 
         // TODO(rmgrimm): Handle the order parameter properly
 
-        for (entry in entries) {
-            if (criteria.match(entry.value)) {
-                resultList.add(SignifiedRepository.StoredSignified(entry.key, entry.value))
+        for ((key, value) in entries) {
+            if (criteria.match(value)) {
+                resultList.add(SignifiedRepository.StoredSignified(key, value))
                 if (resultList.size == maxResults) {
                     break
                 }
@@ -101,5 +104,20 @@ open class InMemorySignifiedRepository constructor() : MutableSignifiedRepositor
 
         return resultList
     }
+
+    override fun findPagedArray(resultsPerPage: Int,
+                                maxResults: Int?,
+                                order: SignifiedRepository.FindOrder,
+                                user: Unit?,
+                                criteria: SignifiedCriteria): PagedArray<SignifiedRepository.StoredSignified<Int>> {
+        val results = find(maxResults = maxResults,
+            order = order,
+            user = user,
+            criteria = criteria)
+
+        return InMemoryPagedArray(0, resultsPerPage, results.toTypedArray())
+    }
+
+
 
 }

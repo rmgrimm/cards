@@ -16,7 +16,17 @@ sealed class Signifier {
     /**
      * The Locale of a [word or definition][Signifier]
      */
-    data class Locale(val lang: String, val country: String? = null, val script: String? = null) {
+    class Locale(lang: String, country: String? = null, script: String? = null) {
+
+        val lang: String = lang.toLowerCase()
+        val country: String? = country?.toUpperCase()
+        val script: String? =
+            if (script == null) {
+                null
+            } else {
+                script[0].toUpperCase() + script.substring(1).toLowerCase()
+            }
+
         infix fun matches(that: Locale): Boolean {
             if (this.lang != that.lang) {
                 return false
@@ -35,6 +45,39 @@ sealed class Signifier {
 
         infix fun doesntMatch(that: Locale): Boolean {
             return !(this matches that)
+        }
+
+        val languageTag: String
+            get() {
+                return lang +
+                    if (country == null) {
+                        ""
+                    } else {
+                        "_$country"
+                    } +
+                    if (script == null) {
+                        ""
+                    } else {
+                        "_$script"
+                    }
+            }
+
+        override fun toString(): String {
+            return languageTag
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Locale) return false
+
+            return this matches other
+        }
+
+        override fun hashCode(): Int {
+            var result = lang.hashCode()
+            result = 31 * result + (country?.hashCode() ?: 0)
+            result = 31 * result + (script?.hashCode() ?: 0)
+            return result
         }
     }
 }

@@ -22,10 +22,10 @@ import rmg.apps.cards.base.model.Signifier
  * @param allCriteria a set of [DSL][SignifiedCriteriaBuilder] commands to build the criteria
  * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
  */
-fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
-                                               order: FindOrder = FindOrder.NONE,
-                                               user: U? = null,
-                                               allCriteria: SignifiedCriteriaBuilder.All.() -> Unit): List<SignifiedRepository.StoredSignified<T>> {
+inline fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
+                                                      order: FindOrder = FindOrder.NONE,
+                                                      user: U? = null,
+                                                      allCriteria: SignifiedCriteriaBuilder.All.() -> Unit): List<SignifiedRepository.StoredSignified<T>> {
     val criteriaBuilder = SignifiedCriteriaBuilder.All()
     criteriaBuilder.allCriteria()
 
@@ -47,10 +47,10 @@ fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
  * @param anyCriteria a set of [DSL][SignifiedCriteriaBuilder] commands to build the criteria
  * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
  */
-fun <T, U> SignifiedRepository<T, U>.findByAny(maxResults: Int? = null,
-                                               order: FindOrder = FindOrder.NONE,
-                                               user: U? = null,
-                                               anyCriteria: SignifiedCriteriaBuilder.Any.() -> Unit): List<SignifiedRepository.StoredSignified<T>> {
+inline fun <T, U> SignifiedRepository<T, U>.findByAny(maxResults: Int? = null,
+                                                      order: FindOrder = FindOrder.NONE,
+                                                      user: U? = null,
+                                                      anyCriteria: SignifiedCriteriaBuilder.Any.() -> Unit): List<SignifiedRepository.StoredSignified<T>> {
     val criteriaBuilder = SignifiedCriteriaBuilder.Any()
     criteriaBuilder.anyCriteria()
 
@@ -77,7 +77,7 @@ sealed class SignifiedCriteriaBuilder(
         conjunctionType = SignifiedCriteria.CompoundCriteria.ConjunctionType.OR
     )
 
-    private fun addCriteria(criteria: SignifiedCriteria) {
+    fun addCriteria(criteria: SignifiedCriteria) {
         if (this.criteria == startingCriteria) {
             this.criteria = criteria
         } else {
@@ -93,21 +93,21 @@ sealed class SignifiedCriteriaBuilder(
         addCriteria(criteria)
     }
 
-    fun not(build: All.() -> Unit) {
+    inline fun not(build: All.() -> Unit) {
         val compoundBuilder = All()
         compoundBuilder.build()
 
         addCriteria(SignifiedCriteria.Not(compoundBuilder.criteria))
     }
 
-    fun all(build: All.() -> Unit) {
+    inline fun all(build: All.() -> Unit) {
         val compoundBuilder = All()
         compoundBuilder.build()
 
         addCriteria(compoundBuilder.criteria)
     }
 
-    fun any(build: Any.() -> Unit) {
+    inline fun any(build: Any.() -> Unit) {
         val compoundBuilder = Any()
         compoundBuilder.build()
 
@@ -122,22 +122,22 @@ sealed class SignifiedCriteriaBuilder(
         addCriteria(SignifiedCriteria.ContainsSignifier(signifierCriteria))
     }
 
-    fun hasWrittenWord(lang: String? = null, country: String? = null, script: String? = null, weight: Int? = null) {
-        var locale: Signifier.Locale? = null
+    fun hasWrittenWord(locale: Signifier.Locale? = null, weight: Int? = null) {
+        addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale, weight)))
+    }
 
-        if (lang != null) {
-            locale = Signifier.Locale(lang = lang, country = country, script = script)
-        }
+    fun hasWrittenWord(lang: String, country: String? = null, script: String? = null, weight: Int? = null) {
+        val locale = Signifier.Locale(lang = lang, country = country, script = script)
 
         addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale, weight)))
     }
 
-    fun hasDefinition(lang: String? = null, country: String? = null, script: String? = null) {
-        var locale: Signifier.Locale? = null
+    fun hasDefinition(locale: Signifier.Locale? = null) {
+        addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.DefinitionCriteria(locale)))
+    }
 
-        if (lang != null) {
-            locale = Signifier.Locale(lang = lang, country = country, script = script)
-        }
+    fun hasDefinition(lang: String, country: String? = null, script: String? = null) {
+        val locale = Signifier.Locale(lang = lang, country = country, script = script)
 
         addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.DefinitionCriteria(locale)))
     }

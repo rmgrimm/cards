@@ -5,14 +5,14 @@ import rmg.apps.cards.base.model.Signified
 import rmg.apps.cards.base.model.Signifier
 import rmg.apps.cards.base.model.WrittenWord
 
-fun <T, U> MutableSignifiedRepository<T, U>.add(element: SignifiedBuilder.() -> Unit): T {
+inline fun <T, U> MutableSignifiedRepository<T, U>.add(element: SignifiedBuilder.() -> Unit): T {
     val builder = SignifiedBuilder()
     builder.element()
 
     return this.add(builder.signified)
 }
 
-fun <T, U> MutableSignifiedRepository<T, U>.addAll(elements: SignifiedListBuilder.() -> Unit) {
+inline fun <T, U> MutableSignifiedRepository<T, U>.addAll(elements: SignifiedListBuilder.() -> Unit) {
     val builder = SignifiedListBuilder()
     builder.elements()
 
@@ -47,7 +47,7 @@ class SignifiedListBuilder {
 
     val signifieds = ArrayList<Signified>()
 
-    fun signified(build: SignifiedBuilder.() -> Unit) {
+    inline fun signified(build: SignifiedBuilder.() -> Unit) {
         val signifiedBuilder = SignifiedBuilder()
         signifiedBuilder.build()
 

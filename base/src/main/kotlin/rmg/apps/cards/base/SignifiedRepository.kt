@@ -14,7 +14,7 @@ import rmg.apps.cards.base.model.WrittenWord
 interface SignifiedRepository<T, in U> : Map<T, Signified> {
 
     /**
-     *
+     * A tuple to keep ID and [Signified] together
      */
     data class StoredSignified<out T>(val id: T, val signified: Signified)
 
@@ -58,7 +58,25 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
      * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
      * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
      */
-    fun find(maxResults: Int? = null, order: SignifiedRepository.FindOrder = SignifiedRepository.FindOrder.NONE, user: U? = null, criteria: SignifiedCriteria = SignifiedCriteria.Any): List<StoredSignified<T>>
+    fun find(maxResults: Int? = null,
+             order: FindOrder = FindOrder.NONE,
+             user: U? = null,
+             criteria: SignifiedCriteria = SignifiedCriteria.Any): List<StoredSignified<T>>
+
+    /**
+     * Find matching [Signified] options
+     *
+     * @param maxResults the maximum number of results to return
+     * @param order how the signified should be ordered when fetching results
+     * @param user the user ID to be used for [spaced repetition][FindOrder.SPACED_REPETITION] finds
+     * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
+     * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
+     */
+    fun findPagedArray(resultsPerPage: Int,
+                       maxResults: Int? = null,
+                       order: FindOrder = FindOrder.NONE,
+                       user: U? = null,
+                       criteria: SignifiedCriteria = SignifiedCriteria.Any): PagedArray<StoredSignified<T>>
 }
 
 /**

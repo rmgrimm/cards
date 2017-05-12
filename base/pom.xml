@@ -98,6 +98,12 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.build.sourceDirectory}</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/kotlin-jvm</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>compile-js</id>
@@ -120,7 +126,7 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.build.sourceDirectory}</sourceDir>
+                                <sourceDir>${project.build.testSourceDirectory}</sourceDir>
                                 <sourceDir>${project.basedir}/src/test/kotlin-jvm</sourceDir>
                             </sourceDirs>
                         </configuration>
@@ -134,7 +140,7 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                <sourceDir>${project.build.testSourceDirectory}</sourceDir>
                                 <sourceDir>${project.basedir}/src/test/kotlin-js</sourceDir>
                             </sourceDirs>
                         </configuration>

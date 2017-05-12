@@ -26,4 +26,8 @@ val signifiedRepository = InMemorySignifiedRepository {
         writtenWord(lang = "zho", script = "Piny", word = "ba4ba5", weight = 2)
         writtenWord(lang = "eng", word = "father")
     }
+    signified {
+        type(Signified.Type.NOUN)
+        writtenWord(lang = "eng", word = "Test")
+    }
 }

@@ -3,6 +3,9 @@
   <component name="AutoImportedSourceRoots">
     <option name="directories">
       <list>
+        <option value="$MODULE_DIR$/src/main/kotlin" />
+        <option value="$MODULE_DIR$/src/main/kotlin-js" />
+        <option value="$MODULE_DIR$/src/main/kotlin-jvm" />
         <option value="$MODULE_DIR$/src/test/kotlin" />
         <option value="$MODULE_DIR$/src/test/kotlin-jvm" />
       </list>
@@ -34,6 +37,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin-jvm" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin-js" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin-jvm" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
