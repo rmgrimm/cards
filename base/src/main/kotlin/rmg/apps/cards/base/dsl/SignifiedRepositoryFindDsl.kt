@@ -1,7 +1,6 @@
 package rmg.apps.cards.base.dsl
 
 import rmg.apps.cards.base.SignifiedCriteria
-import rmg.apps.cards.base.MutableSignifiedRepository
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.SignifiedRepository.FindOrder
 import rmg.apps.cards.base.SignifierCriteria
@@ -26,7 +25,7 @@ import rmg.apps.cards.base.model.Signifier
 fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
                                                order: FindOrder = FindOrder.NONE,
                                                user: U? = null,
-                                               allCriteria: SignifiedCriteriaBuilder.All.() -> Unit): List<Pair<T, Signified>> {
+                                               allCriteria: SignifiedCriteriaBuilder.All.() -> Unit): List<SignifiedRepository.StoredSignified<T>> {
     val criteriaBuilder = SignifiedCriteriaBuilder.All()
     criteriaBuilder.allCriteria()
 
@@ -51,7 +50,7 @@ fun <T, U> SignifiedRepository<T, U>.findByAll(maxResults: Int? = null,
 fun <T, U> SignifiedRepository<T, U>.findByAny(maxResults: Int? = null,
                                                order: FindOrder = FindOrder.NONE,
                                                user: U? = null,
-                                               anyCriteria: SignifiedCriteriaBuilder.Any.() -> Unit): List<Pair<T, Signified>> {
+                                               anyCriteria: SignifiedCriteriaBuilder.Any.() -> Unit): List<SignifiedRepository.StoredSignified<T>> {
     val criteriaBuilder = SignifiedCriteriaBuilder.Any()
     criteriaBuilder.anyCriteria()
 

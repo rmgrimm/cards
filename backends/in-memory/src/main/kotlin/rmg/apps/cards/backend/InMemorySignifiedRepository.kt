@@ -1,9 +1,14 @@
 package rmg.apps.cards.backend
 
-import rmg.apps.cards.base.SignifiedCriteria
 import rmg.apps.cards.base.MutableSignifiedRepository
+import rmg.apps.cards.base.SignifiedCriteria
 import rmg.apps.cards.base.SignifiedRepository
+import rmg.apps.cards.base.dsl.SignifiedListBuilder
+import rmg.apps.cards.base.dsl.addAll
+import rmg.apps.cards.base.model.Definition
 import rmg.apps.cards.base.model.Signified
+import rmg.apps.cards.base.model.Signifier
+import rmg.apps.cards.base.model.WrittenWord
 
 /**
  * [MutableSignifiedRepository] that holds all data in memory in an [ArrayList]
@@ -12,7 +17,12 @@ import rmg.apps.cards.base.model.Signified
  *
  * This will only support one user, so the user ID type is [Unit]
  */
-class InMemorySignifiedRepository : MutableSignifiedRepository<Int, Unit> {
+open class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int, Unit> {
+
+    constructor(elements: SignifiedListBuilder.() -> Unit): this() {
+        addAll(elements)
+    }
+
     data class Entry(override val key: Int, override var value: Signified) : MutableMap.MutableEntry<Int, Signified> {
         override fun setValue(newValue: Signified): Signified {
             value = newValue
@@ -60,14 +70,29 @@ class InMemorySignifiedRepository : MutableSignifiedRepository<Int, Unit> {
     override fun putAll(from: Map<out Int, Signified>) = from.forEach { internalPut(it.key, it.value) }
     override fun remove(key: Int): Signified? = internalPut(key, null)
 
-    override fun find(maxResults: Int?, order: SignifiedRepository.FindOrder, user: Unit?, criteria: SignifiedCriteria): List<Pair<Int, Signified>> {
-        val resultList = ArrayList<Pair<Int, Signified>>(maxResults ?: backingList.size)
+    override val locales: Set<Signifier.Locale>
+        get() {
+            val output = HashSet<Signifier.Locale>()
+            backingList.forEach {
+                it?.signifiers?.forEach {
+                    when(it) {
+                        is WrittenWord -> output.add(it.locale)
+                        is Definition -> output.add(it.locale)
+                    }
+                }
+            }
+
+            return output
+        }
+
+    override fun find(maxResults: Int?, order: SignifiedRepository.FindOrder, user: Unit?, criteria: SignifiedCriteria): List<SignifiedRepository.StoredSignified<Int>> {
+        val resultList = ArrayList<SignifiedRepository.StoredSignified<Int>>(maxResults ?: backingList.size)
 
         // TODO(rmgrimm): Handle the order parameter properly
 
         for (entry in entries) {
             if (criteria.match(entry.value)) {
-                resultList.add(entry.toPair())
+                resultList.add(SignifiedRepository.StoredSignified(entry.key, entry.value))
                 if (resultList.size == maxResults) {
                     break
                 }

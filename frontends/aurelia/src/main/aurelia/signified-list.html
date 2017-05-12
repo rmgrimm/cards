@@ -1,3 +1,25 @@
 <template>
-
+  <section class="au-animate">
+    <label>
+      Display Locale:
+      <select value.bind="displayLocale">
+        <option repeat.for="locale of repository.localeArray" model.bind="locale">${locale}</option>
+      </select>
+    </label>
+    <p>Your selected locale is: ${displayLocale}</p>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <td>Word name</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>A!</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </template>

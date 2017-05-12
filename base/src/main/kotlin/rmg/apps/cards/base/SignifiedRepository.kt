@@ -12,6 +12,12 @@ import rmg.apps.cards.base.model.WrittenWord
  * @param U the type used as an ID for users, for purposes of spaced repetition
  */
 interface SignifiedRepository<T, in U> : Map<T, Signified> {
+
+    /**
+     *
+     */
+    data class StoredSignified<out T>(val id: T, val signified: Signified)
+
     /**
      * Ordering options used when calling [SignifiedRepository.find]
      */
@@ -33,6 +39,17 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
     }
 
     /**
+     * All available locales within the repository
+     */
+    val locales: Set<Signifier.Locale>
+
+    /**
+     * All available locales as an array to facilitate usage in JS
+     */
+    val localeArray: Array<Signifier.Locale>
+        get() = locales.toTypedArray()
+
+    /**
      * Find matching [Signified] options
      *
      * @param maxResults the maximum number of results to return
@@ -41,7 +58,7 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
      * @param criteria a set of [SignifiedCriteria] describing which [Signified]s to return
      * @return a [List] of [Pair], with id as the left element and the [Signified] on the right
      */
-    fun find(maxResults: Int? = null, order: SignifiedRepository.FindOrder = SignifiedRepository.FindOrder.NONE, user: U? = null, criteria: SignifiedCriteria = SignifiedCriteria.Any): List<Pair<T, Signified>>
+    fun find(maxResults: Int? = null, order: SignifiedRepository.FindOrder = SignifiedRepository.FindOrder.NONE, user: U? = null, criteria: SignifiedCriteria = SignifiedCriteria.Any): List<StoredSignified<T>>
 }
 
 /**

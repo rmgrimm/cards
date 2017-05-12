@@ -73,7 +73,7 @@ class MultipleChoiceQuestionGeneratorUnitTest {
             })
         } willReturn {
             answerSignifieds.filter(containsAnswerCriteria::match)
-                .mapIndexed { index, signified -> index to signified }
+                .mapIndexed { index, signified -> SignifiedRepository.StoredSignified(index, signified) }
         }
 
         val question = generator.generateQuestion(questionSignified)

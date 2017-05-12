@@ -4,6 +4,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import rmg.apps.cards.base.MutableSignifiedRepository
+import rmg.apps.cards.base.dsl.addAll
 import rmg.apps.cards.base.dsl.findByAll
 import rmg.apps.cards.base.dsl.findByAny
 import kotlin.test.*
@@ -61,88 +62,85 @@ abstract class AbstractMutableSignifiedRepositoryUnitTest<I, U, R : MutableSigni
     }
 
     private fun addSignifiedForFindTests() {
-        repository.addAll(
-            listOf(
-                // The first several words of the HSK level 1 word list
-                // TODO(rgrimm): Think about making a builder DSL/implicit receiver for building lists like this
-                Signified(type = Signified.Type.VERB,
-                    signifiers = listOf(
-                        WrittenWord(lang = "zho", script = "Hans", word = "爱"),
-                        WrittenWord(lang = "zho", script = "Hant", word = "愛"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ai4", weight = 1),
-                        WrittenWord(lang = "eng", word = "to love")
-                    )),
-                Signified(type = Signified.Type.NUMERAL,
-                    signifiers = listOf(
-                        WrittenWord(lang = "zho", script = "Hans", word = "八"),
-                        WrittenWord(lang = "zho", script = "Hant", word = "八"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ba1", weight = 1),
-                        WrittenWord(lang = "eng", word = "eight")
-                    )),
-                Signified(type = Signified.Type.NOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "zho", script = "Hans", word = "爸爸"),
-                        WrittenWord(lang = "zho", script = "Hant", word = "爸爸"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ba4ba5", weight = 2),
-                        WrittenWord(lang = "eng", word = "father")
-                    )),
-                Signified(type = Signified.Type.NOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "zho", script = "Hans", word = "杯子"),
-                        WrittenWord(lang = "zho", script = "Hant", word = "杯子"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "bei1zi5", weight = 2),
-                        WrittenWord(lang = "eng", word = "cup")
-                    )),
-                Signified(type = Signified.Type.NOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "zho", script = "Hans", word = "北京"),
-                        WrittenWord(lang = "zho", script = "Hant", word = "北京"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "bei3jing1", weight = 2),
-                        WrittenWord(lang = "eng", word = "Beijing")
-                    )),
-                Signified(type = Signified.Type.MEASURE_WORD,
-                    signifiers = listOf(
-                        WrittenWord(lang = "zho", script = "Hans", word = "本"),
-                        WrittenWord(lang = "zho", script = "Hant", word = "本"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ben3", weight = 1),
-                        WrittenWord(lang = "eng", word = "measure word for books")
-                    )),
+        repository.addAll {
+            signified {
+                type(Signified.Type.VERB)
+                writtenWord(lang = "zho", script = "Hans", word = "爱")
+                writtenWord(lang = "zho", script = "Hant", word = "愛")
+                writtenWord(lang = "zho", script = "Piny", word = "ai4", weight = 1)
+                writtenWord(lang = "eng", word = "to love")
+            }
+            signified {
+                type(Signified.Type.NUMERAL)
+                writtenWord(lang = "zho", script = "Hans", word = "八")
+                writtenWord(lang = "zho", script = "Hant", word = "八")
+                writtenWord(lang = "zho", script = "Piny", word = "ba1", weight = 1)
+                writtenWord(lang = "eng", word = "eight")
+            }
+            signified {
+                type(Signified.Type.NOUN)
+                writtenWord(lang = "zho", script = "Hans", word = "爸爸")
+                writtenWord(lang = "zho", script = "Hant", word = "爸爸")
+                writtenWord(lang = "zho", script = "Piny", word = "ba4ba5", weight = 2)
+                writtenWord(lang = "eng", word = "father")
+            }
+            signified {
+                type(Signified.Type.NOUN)
+                writtenWord(lang = "zho", script = "Hans", word = "杯子")
+                writtenWord(lang = "zho", script = "Hant", word = "杯子")
+                writtenWord(lang = "zho", script = "Piny", word = "bei1zi5", weight = 2)
+                writtenWord(lang = "eng", word = "cup")
+            }
+            signified {
+                type(Signified.Type.NOUN)
+                writtenWord(lang = "zho", script = "Hans", word = "北京")
+                writtenWord(lang = "zho", script = "Hant", word = "北京")
+                writtenWord(lang = "zho", script = "Piny", word = "bei3jing1", weight = 2)
+                writtenWord(lang = "eng", word = "Beijing")
+            }
+            signified {
+                type(Signified.Type.MEASURE_WORD)
+                writtenWord(lang = "zho", script = "Hans", word = "本")
+                writtenWord(lang = "zho", script = "Hant", word = "本")
+                writtenWord(lang = "zho", script = "Piny", word = "ben3", weight = 1)
+                writtenWord(lang = "eng", word = "measure word for books")
+            }
 
                 // A few other words
-                Signified(type = Signified.Type.PRONOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "eng", word = "I"),
-                        WrittenWord(lang = "eng", word = "me"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "wo3", weight = 1)
-                    )),
-                Signified(type = Signified.Type.DETERMINER,
-                    signifiers = listOf(
-                        WrittenWord(lang = "eng", word = "My"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "wo3de5", weight = 2)
-                    )),
-                Signified(type = Signified.Type.PRONOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "eng", word = "You"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ni3", weight = 1)
-                    )),
-                Signified(type = Signified.Type.DETERMINER,
-                    signifiers = listOf(
-                        WrittenWord(lang = "eng", word = "Your"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ni3de5", weight = 2)
-                    )),
-                Signified(type = Signified.Type.PRONOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "eng", word = "He"),
-                        WrittenWord(lang = "eng", word = "Him"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ta1", weight = 1)
-                    )),
-                Signified(type = Signified.Type.PRONOUN,
-                    signifiers = listOf(
-                        WrittenWord(lang = "eng", word = "She"),
-                        WrittenWord(lang = "eng", word = "Her"),
-                        WrittenWord(lang = "zho", script = "Piny", word = "ta1", weight = 1)
-                    ))
-            ))
+            signified {
+                type(Signified.Type.PRONOUN)
+                writtenWord(lang = "eng", word = "I")
+                writtenWord(lang = "eng", word = "me")
+                writtenWord(lang = "zho", script = "Piny", word = "wo3", weight = 1)
+            }
+            signified {
+                type(Signified.Type.DETERMINER)
+                writtenWord(lang = "eng", word = "My")
+                writtenWord(lang = "zho", script = "Piny", word = "wo3de5", weight = 2)
+            }
+            signified {
+                type(Signified.Type.PRONOUN)
+                writtenWord(lang = "eng", word = "You")
+                writtenWord(lang = "zho", script = "Piny", word = "ni3", weight = 1)
+            }
+            signified {
+                type(Signified.Type.DETERMINER)
+                writtenWord(lang = "eng", word = "Your")
+                writtenWord(lang = "zho", script = "Piny", word = "ni3de5", weight = 2)
+            }
+            signified {
+                type(Signified.Type.PRONOUN)
+                writtenWord(lang = "eng", word = "He")
+                writtenWord(lang = "eng", word = "Him")
+                writtenWord(lang = "zho", script = "Piny", word = "ta1", weight = 1)
+            }
+            signified {
+                type(Signified.Type.PRONOUN)
+                writtenWord(lang = "eng", word = "She")
+                writtenWord(lang = "eng", word = "Her")
+                writtenWord(lang = "zho", script = "Piny", word = "ta1", weight = 1)
+            }
+        }
     }
 
     @Before
@@ -359,6 +357,19 @@ abstract class AbstractMutableSignifiedRepositoryUnitTest<I, U, R : MutableSigni
     }
 
     @Test
+    fun testLocales_Success() {
+        addSignifiedForFindTests()
+
+        val locales = repository.locales
+
+        assertEquals(4, locales.size)
+        assertTrue(locales.contains(Signifier.Locale(lang = "eng")))
+        assertTrue(locales.contains(Signifier.Locale(lang = "zho", script = "Hans")))
+        assertTrue(locales.contains(Signifier.Locale(lang = "zho", script = "Hant")))
+        assertTrue(locales.contains(Signifier.Locale(lang = "zho", script = "Piny")))
+    }
+
+    @Test
     fun testFind_ByTypeSuccess() {
         addSignifiedForFindTests()
 
@@ -392,7 +403,7 @@ abstract class AbstractMutableSignifiedRepositoryUnitTest<I, U, R : MutableSigni
         assertFalse(result.isEmpty())
         result.forEach { (_, signified) ->
             var hasMatchingSignifier = false
-            signified.signifiers.forEach signifierLoop@{ signifier ->
+            signified.signifiers.forEach signifierLoop@ { signifier ->
                 if (signifier !is WrittenWord) {
                     return@signifierLoop
                 }
