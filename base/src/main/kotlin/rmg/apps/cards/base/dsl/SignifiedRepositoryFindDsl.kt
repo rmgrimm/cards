@@ -123,13 +123,13 @@ sealed class SignifiedCriteriaBuilder(
     }
 
     fun hasWrittenWord(locale: Locale? = null, weight: Int? = null) {
-        addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale, weight)))
+        addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale = locale, weight = weight)))
     }
 
     fun hasWrittenWord(lang: String, country: String? = null, script: String? = null, weight: Int? = null) {
         val locale = Locale(lang = lang, country = country, script = script)
 
-        addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale, weight)))
+        addCriteria(SignifiedCriteria.ContainsSignifier(SignifierCriteria.WrittenWordCriteria(locale = locale, weight = weight)))
     }
 
     fun hasDefinition(locale: Locale? = null) {

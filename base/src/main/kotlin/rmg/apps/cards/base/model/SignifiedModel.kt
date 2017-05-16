@@ -24,7 +24,9 @@ data class WrittenWord(val locale: Locale, val word: String, val weight: Int = w
 /**
  * A written definition, which describes
  */
-data class Definition(val locale: Locale, val definition: String) : Signifier()
+data class Definition(val locale: Locale, val definition: String) : Signifier() {
+    constructor(lang: String, country: String? = null, script: String? = null, definition: String) : this(Locale(lang, country, script), definition)
+}
 
 data class SpokenWord(val locale: Locale, val data: Any) : Signifier() {
     init {

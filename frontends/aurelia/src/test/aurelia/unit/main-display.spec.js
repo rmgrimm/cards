@@ -1,4 +1,4 @@
-import {App} from "app";
+import {MainDisplay} from "main-display";
 
 class RouterStub {
   routes;
@@ -18,7 +18,7 @@ describe('the App module', () => {
 
   beforeEach(() => {
     mockedRouter = new RouterStub();
-    sut = new App();
+    sut = new MainDisplay();
     sut.configureRouter(mockedRouter, mockedRouter);
   });
 
@@ -31,11 +31,11 @@ describe('the App module', () => {
   });
 
   it('should have a signifier list route', () => {
-    expect(sut.router.routes).toContainEqual({ route: ['', 'word-list'], name: 'signified-list',  moduleId: './signified-list', nav: true, title: 'Word List' });
+    expect(sut.router.routes).toContainEqual({ route: 'words', name: 'signified-list',  moduleId: './manage/list', nav: true, title: 'Word List' });
   });
 
   it('should have a quiz route', () => {
-    expect(sut.router.routes).toContainEqual({ route: 'start-quiz', name: 'start-quiz', moduleId: './start-quiz', nav: true, title: 'Start Quiz' });
+    expect(sut.router.routes).toContainEqual({ route: 'setup-quiz', name: 'setup-quiz', moduleId: './quiz/start-quiz', nav: true, title: 'Start Quiz' });
   });
 
 });

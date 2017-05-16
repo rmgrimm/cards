@@ -27,5 +27,6 @@ val signifiedRepository = InMemorySignifiedRepository {
     signified {
         type(Signified.Type.NOUN)
         writtenWord(lang = "eng", word = "Test")
+        definition(lang = "eng", definition = "a procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use")
     }
 }

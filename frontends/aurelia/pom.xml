@@ -11,6 +11,7 @@
         <relativePath>../../parent</relativePath>
     </parent>
 
+    <groupId>rmg.apps.cards.frontend</groupId>
     <artifactId>cards-frontend-aurelia</artifactId>
     <packaging>jar</packaging>
 
@@ -24,12 +25,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>rmg.apps.cards.support</groupId>
+            <artifactId>cards-support-aurelia</artifactId>
+            <classifier>javascript</classifier>
+        </dependency>
+        <dependency>
             <groupId>rmg.apps.cards</groupId>
             <artifactId>cards-base</artifactId>
             <classifier>javascript</classifier>
         </dependency>
         <dependency>
-            <groupId>rmg.apps.cards</groupId>
+            <groupId>rmg.apps.cards.backend</groupId>
             <artifactId>${cards-aurelia-backend-project}</artifactId>
             <classifier>javascript</classifier>
         </dependency>
@@ -63,6 +69,29 @@
                     <execution>
                         <id>default-test</id>
                         <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-empty-aurelia-view</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/aurelia</directory>
+                                    <includes>
+                                        <include>cards-frontend-aurelia.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/js</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -188,6 +217,9 @@
                         </goals>
                         <configuration>
                             <karmaConfPath>${project.basedir}/src/test/aurelia/karma.conf.js</karmaConfPath>
+
+                            <!-- Don't fail, just in case the machine running this doesn't have Chrome installed -->
+                            <failOnError>false</failOnError>
                         </configuration>
                     </execution>
                     <execution>

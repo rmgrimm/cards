@@ -10,6 +10,7 @@
         <module name="cards-backend-in-memory" />
         <module name="cards-base" />
         <module name="cards-frontend-aurelia" />
+        <module name="cards-support-aurelia" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -21,6 +22,8 @@
       <module name="cards-frontends" target="1.5" />
       <module name="cards-parent" target="1.5" />
       <module name="cards-root" target="1.5" />
+      <module name="cards-support" target="1.5" />
+      <module name="cards-support-aurelia" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

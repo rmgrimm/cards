@@ -6,11 +6,11 @@ export class SortValueConverter {
       if (typeof a === typeof b && typeof a === 'number') {
         return (a[propertyName] - b[propertyName]) * factor;
       } else if (a < b) {
-        return -1
+        return -1 * factor;
       } else if (a === b) {
         return 0
       } else {
-        return 1
+        return factor;
       }
     });
   }

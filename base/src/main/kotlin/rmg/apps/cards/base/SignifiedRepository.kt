@@ -42,10 +42,14 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
     val locales: Set<Locale>
 
     /**
-     * All available locales as an array to facilitate usage in JS
+     * WrittenWord locales within the repository
      */
-    val localeArray: Array<Locale>
-        get() = locales.toTypedArray()
+    val writtenWordLocales: Set<Locale>
+
+    /**
+     * Definition locales within the repository
+     */
+    val definitionLocales: Set<Locale>
 
     /**
      * Find matching [Signified] options
@@ -150,7 +154,7 @@ sealed class SignifiedCriteria {
      * Criteria to select based upon a [Signifier] matching the [criteria][SignifierCriteria]
      */
     data class ContainsSignifier(val signifierCriteria: SignifierCriteria) : SignifiedCriteria() {
-        override fun match(signified: Signified) = signified.signifiers.any{ signifierCriteria.match(it) }
+        override fun match(signified: Signified) = signified.signifiers.any { signifierCriteria.match(it) }
     }
 
     /**
@@ -207,16 +211,21 @@ sealed class SignifierCriteria {
      * Possible to further filter based upon [locale][WrittenWord.locale] or [weight][WrittenWord.weight].
      *
      * @param locale optional filter for the [locale][Locale] of [WrittenWord]
+     * @param localeStrict flag indicating whether the locale should match strictly
      * @param weight optional filter for the [weight][WrittenWord.weight]
      */
-    data class WrittenWordCriteria(val locale: Locale? = null, val weight: Int? = null) : SignifierCriteria() {
+    data class WrittenWordCriteria(val locale: Locale? = null, val localeStrict: Boolean = false, val weight: Int? = null) : SignifierCriteria() {
         override fun match(signifier: Signifier): Boolean {
             if (signifier !is WrittenWord) {
                 return false
             }
 
-            if (locale != null && locale doesntMatch signifier.locale) {
-                return false
+            if (locale != null) {
+                if (localeStrict && locale strictDoesntMatch signifier.locale) {
+                    return false
+                } else if (!localeStrict && locale doesntMatch signifier.locale) {
+                    return false
+                }
             }
 
             if (weight != null && weight != signifier.weight) {
@@ -233,15 +242,20 @@ sealed class SignifierCriteria {
      * Possible to further fitler based upon [locale][Definition.locale]
      *
      * @param locale optional filter for the [locale][Locale] of [Definition]
+     * @param localeStrict flag indicating whether the locale should match strictly
      */
-    data class DefinitionCriteria(val locale: Locale? = null) : SignifierCriteria() {
+    data class DefinitionCriteria(val locale: Locale? = null, val localeStrict: Boolean = false) : SignifierCriteria() {
         override fun match(signifier: Signifier): Boolean {
             if (signifier !is Definition) {
                 return false
             }
 
-            if (locale != null && locale doesntMatch signifier.locale) {
-                return false
+            if (locale != null) {
+                if (localeStrict && locale strictDoesntMatch signifier.locale) {
+                    return false
+                } else if (!localeStrict && locale doesntMatch signifier.locale) {
+                    return false
+                }
             }
 
             return true

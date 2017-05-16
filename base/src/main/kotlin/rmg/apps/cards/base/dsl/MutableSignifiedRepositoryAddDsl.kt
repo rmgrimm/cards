@@ -1,6 +1,7 @@
 package rmg.apps.cards.base.dsl
 
 import rmg.apps.cards.base.MutableSignifiedRepository
+import rmg.apps.cards.base.model.Definition
 import rmg.apps.cards.base.model.Signified
 import rmg.apps.cards.base.model.Signifier
 import rmg.apps.cards.base.model.WrittenWord
@@ -37,6 +38,10 @@ class SignifiedBuilder {
 
     fun writtenWord(lang: String, country: String? = null, script: String? = null, word: String, weight: Int = word.length) {
         signifiers.add(WrittenWord(lang = lang, country = country, script = script, word = word, weight = weight))
+    }
+
+    fun definition(lang: String, country: String? = null, script: String? = null, definition: String) {
+        signifiers.add(Definition(lang = lang, country = country, script = script, definition = definition))
     }
 
     // TODO(rgrimm): Build the functions for other signifier types

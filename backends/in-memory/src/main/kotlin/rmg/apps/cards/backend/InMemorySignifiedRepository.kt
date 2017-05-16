@@ -85,6 +85,34 @@ class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int
             return output
         }
 
+    override val writtenWordLocales: Set<Locale>
+        get() {
+            val output = HashSet<Locale>()
+            backingList.forEach {
+                it?.signifiers?.forEach {
+                    when(it) {
+                        is WrittenWord -> output.add(it.locale)
+                    }
+                }
+            }
+
+            return output
+        }
+
+    override val definitionLocales: Set<Locale>
+        get() {
+            val output = HashSet<Locale>()
+            backingList.forEach {
+                it?.signifiers?.forEach {
+                    when(it) {
+                        is Definition -> output.add(it.locale)
+                    }
+                }
+            }
+
+            return output
+        }
+
     override fun find(maxResults: Int?,
                       order: SignifiedRepository.FindOrder,
                       user: Unit?,

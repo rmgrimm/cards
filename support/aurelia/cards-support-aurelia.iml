@@ -6,7 +6,7 @@
         <compilerSettings />
         <compilerArguments>
           <option name="sourceMap" value="true" />
-          <option name="moduleKind" value="amd" />
+          <option name="moduleKind" value="umd" />
           <option name="languageVersion" value="1.1" />
           <option name="apiVersion" value="1.1" />
           <option name="pluginClasspaths">
@@ -24,21 +24,12 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/aurelia" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/aurelia" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin-js" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin-js" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="cards-support-aurelia" />
-    <orderEntry type="module" module-name="cards-base" />
-    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.1.2-3" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
-    <orderEntry type="module" module-name="cards-backend-in-memory" />
-    <orderEntry type="module" module-name="cards-base" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.2-3" level="project" />
   </component>
 </module>

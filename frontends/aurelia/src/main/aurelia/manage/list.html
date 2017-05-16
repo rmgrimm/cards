@@ -1,0 +1,28 @@
+<template>
+  <require from="cards-frontend-aurelia"></require>
+  <require from="../value-converters"></require>
+
+  <section class="au-animate">
+    <h4>
+      Display Locale(s):
+    </h4>
+    <ul>
+      <li repeat.for="locale of availableWordLocales | sort:languageTag">
+        <label>
+          <input type="checkbox" model.bind="locale" checked.bind="displayWordLocales"/>
+          ${locale | localeDisplayName} (${locale.languageTag})
+        </label>
+      </li>
+    </ul>
+    <label>
+      <h4>Definition Locale:</h4>
+      <select value.bind="displayDefinitionLocale">
+        <option model.bind="none">No definition</option>
+        <option repeat.for="locale of availableDefinitionLocales | sort:languageTag" model.bind="locale">${locale | localeDisplayName} (${locale.languageTag})</option>
+      </select>
+    </label>
+    <div class="container-fluid row">
+      <compose view-model="./list-detail" repeat.for="signifiedTuple of currentPage.array | sort:id:ascending" model.bind="signifiedTuple"></compose>
+    </div>
+  </section>
+</template>

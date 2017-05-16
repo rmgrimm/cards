@@ -11,14 +11,14 @@
         <relativePath>../parent</relativePath>
     </parent>
 
-    <groupId>rmg.apps.cards.backend</groupId>
-    <artifactId>cards-backends</artifactId>
+    <groupId>rmg.apps.cards.support</groupId>
+    <artifactId>cards-support</artifactId>
     <packaging>pom</packaging>
 
-    <name>Cards - Backends Maven Project</name>
-    <description><![CDATA[Maven POM for aggregation of the backend modules]]></description>
+    <name>Cards - Support Maven Project</name>
+    <description><![CDATA[Maven POM for aggregation of the support/helper modules]]></description>
 
     <modules>
-        <module>in-memory</module>
+        <module>aurelia</module>
     </modules>
 </project>

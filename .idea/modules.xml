@@ -9,6 +9,8 @@
       <module fileurl="file://$PROJECT_DIR$/frontends/cards-frontends.iml" filepath="$PROJECT_DIR$/frontends/cards-frontends.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent/cards-parent.iml" filepath="$PROJECT_DIR$/parent/cards-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/cards-root.iml" filepath="$PROJECT_DIR$/cards-root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/support/cards-support.iml" filepath="$PROJECT_DIR$/support/cards-support.iml" />
+      <module fileurl="file://$PROJECT_DIR$/support/aurelia/cards-support-aurelia.iml" filepath="$PROJECT_DIR$/support/aurelia/cards-support-aurelia.iml" />
     </modules>
   </component>
 </project>

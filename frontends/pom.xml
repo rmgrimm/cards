@@ -11,6 +11,7 @@
         <relativePath>../parent</relativePath>
     </parent>
 
+    <groupId>rmg.apps.cards.frontend</groupId>
     <artifactId>cards-frontends</artifactId>
     <packaging>pom</packaging>
 
