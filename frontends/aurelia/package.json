@@ -4,7 +4,7 @@
   "description": "A frontend for Cards with Aurelia and Webpack.",
   "main": "target/dist/app.bundle.js",
   "repository": {
-    "url": "git+ssh://robert@playground.pepperhood.com/home/robert/Projects/cards-kotlin.git",
+    "url": "https://github.com/rmgrimm/cards.git",
     "type": "git"
   },
   "author": "Robert Grimm <grimm.rob@gmail.com>",
