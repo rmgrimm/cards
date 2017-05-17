@@ -11,7 +11,7 @@
   "contributors": [
     {"name": "Bazyli Brzóska", "email": "bazyli.brzoska@gmail.com"}
   ],
-  "license": "CC0-1.0",
+  "license": "MIT",
   "engines": {
     "node": ">= 6.0.0"
   },
