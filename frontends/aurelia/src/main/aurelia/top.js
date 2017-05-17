@@ -5,9 +5,9 @@ export class Top {
     config.title = 'Cards';
 
     config.map([
-      { route: '', redirect: 'app' },
-      { route: 'app',      name: 'main-display', moduleId: PLATFORM.moduleName('./main-display'),  title: ''},
-      { route: 'quiz/:id', name: 'quiz',         moduleId: PLATFORM.moduleName('./quiz/run-quiz'), title: 'Quiz'}
+      { route: '', redirect: 'cards' },
+      { route: 'cards/',         name: 'main-display', moduleId: PLATFORM.moduleName('./main-display'),  title: ''},
+      { route: 'cards/quiz/:id', name: 'quiz',         moduleId: PLATFORM.moduleName('./quiz/run-quiz'), title: 'Quiz'}
     ]);
 
     this.router = router;

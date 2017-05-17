@@ -63,6 +63,28 @@
             <!-- Internal dependencies -->
             <dependency>
                 <groupId>rmg.apps.cards.support</groupId>
+                <artifactId>cards-support-kotlin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>rmg.apps.cards.support</groupId>
+                <artifactId>cards-support-kotlin</artifactId>
+                <classifier>javascript</classifier>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>rmg.apps.cards.support</groupId>
+                <artifactId>cards-support-kotlin-jvm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>rmg.apps.cards.support</groupId>
+                <artifactId>cards-support-kotlin-js</artifactId>
+                <classifier>javascript</classifier>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>rmg.apps.cards.support</groupId>
                 <artifactId>cards-support-aurelia</artifactId>
                 <version>${project.version}</version>
             </dependency>

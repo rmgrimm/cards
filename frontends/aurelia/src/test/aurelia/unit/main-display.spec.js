@@ -27,7 +27,7 @@ describe('the App module', () => {
   });
 
   it('configures the router title', () => {
-    expect(sut.router.title).toEqual('Cards');
+    expect(sut.router.title).toEqual(undefined);
   });
 
   it('should have a signifier list route', () => {

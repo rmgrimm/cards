@@ -19,6 +19,9 @@
     <description><![CDATA[Maven POM for aggregation of the support/helper modules]]></description>
 
     <modules>
+        <module>kotlin</module>
+        <module>kotlin-jvm</module>
+        <module>kotlin-js</module>
         <module>aurelia</module>
     </modules>
 </project>

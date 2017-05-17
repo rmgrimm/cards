@@ -8,9 +8,3 @@ backend.
 
 This package provides qualify-of-life methods and types to make it easier to
 build base types.
-
-# Package kotlin
-
-Custom hacks of the kotlin namespace, using Java to avoid the Kotlin compiler refusal to build kotlin.*
-
-These will be removed as the features are available in vanilla Kotlin

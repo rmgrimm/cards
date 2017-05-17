@@ -18,12 +18,12 @@ describe('cards app', function() {
   });
 
   it('should navigate to welcome page', async () => {
-    await poSkeleton.navigateTo('#/app/welcome');
+    await poSkeleton.navigateTo('#/cards/welcome');
     await expect(poWelcome.getGreeting()).toBe('Welcome to the Aurelia Navigation App');
   });
 
   it('should automatically write down the fullname', async () => {
-    await poSkeleton.navigateTo('#/app/welcome');
+    await poSkeleton.navigateTo('#/cards/welcome');
     await poWelcome.setFirstname('John');
     await poWelcome.setLastname('Doe');
 
@@ -37,12 +37,12 @@ describe('cards app', function() {
   });
 
   it('should show alert message when clicking submit button', async () => {
-    await poSkeleton.navigateTo('#/app/welcome');
+    await poSkeleton.navigateTo('#/cards/welcome');
     await expect(poWelcome.openAlertDialog()).toBe(true);
   });
 
   it('should navigate to signified list page', async () => {
-    await poSkeleton.navigateTo('#/app/words');
+    await poSkeleton.navigateTo('#/cards/words');
     await expect(poSkeleton.getCurrentPageTitle()).toBe('Github Users | Cards');
   });
 });

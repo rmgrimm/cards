@@ -11,6 +11,9 @@
       <module fileurl="file://$PROJECT_DIR$/cards-root.iml" filepath="$PROJECT_DIR$/cards-root.iml" />
       <module fileurl="file://$PROJECT_DIR$/support/cards-support.iml" filepath="$PROJECT_DIR$/support/cards-support.iml" />
       <module fileurl="file://$PROJECT_DIR$/support/aurelia/cards-support-aurelia.iml" filepath="$PROJECT_DIR$/support/aurelia/cards-support-aurelia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/support/kotlin/cards-support-kotlin.iml" filepath="$PROJECT_DIR$/support/kotlin/cards-support-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/support/kotlin-js/cards-support-kotlin-js.iml" filepath="$PROJECT_DIR$/support/kotlin-js/cards-support-kotlin-js.iml" />
+      <module fileurl="file://$PROJECT_DIR$/support/kotlin-jvm/cards-support-kotlin-jvm.iml" filepath="$PROJECT_DIR$/support/kotlin-jvm/cards-support-kotlin-jvm.iml" />
     </modules>
   </component>
 </project>

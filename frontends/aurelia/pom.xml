@@ -26,6 +26,16 @@
     <dependencies>
         <dependency>
             <groupId>rmg.apps.cards.support</groupId>
+            <artifactId>cards-support-kotlin</artifactId>
+            <classifier>javascript</classifier>
+        </dependency>
+        <dependency>
+            <groupId>rmg.apps.cards.support</groupId>
+            <artifactId>cards-support-kotlin-js</artifactId>
+            <classifier>javascript</classifier>
+        </dependency>
+        <dependency>
+            <groupId>rmg.apps.cards.support</groupId>
             <artifactId>cards-support-aurelia</artifactId>
             <classifier>javascript</classifier>
         </dependency>
@@ -137,7 +147,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>cards-base,${cards-aurelia-backend-project}</includeArtifactIds>
+                            <includeArtifactIds>cards-support-kotlin,cards-support-kotlin-js,cards-support-aurelia,cards-base,${cards-aurelia-backend-project}</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/js</outputDirectory>
                             <includes>**\/*.js</includes>
                             <!-- don't need .meta.js in runtime -->

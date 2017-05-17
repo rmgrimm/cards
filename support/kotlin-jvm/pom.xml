@@ -8,33 +8,20 @@
         <groupId>rmg.apps.cards</groupId>
         <artifactId>cards-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../parent</relativePath>
+        <relativePath>../../parent</relativePath>
     </parent>
 
-    <artifactId>cards-base</artifactId>
+    <groupId>rmg.apps.cards.support</groupId>
+    <artifactId>cards-support-kotlin-jvm</artifactId>
     <packaging>jar</packaging>
 
-    <name>Cards - Base Library</name>
-    <description><![CDATA[Base models and interfaces for Cards app]]></description>
+    <name>Cards - Kotlin Support - JVM module</name>
+    <description><![CDATA[Additional support for Kotlin - JVM module]]></description>
 
     <dependencies>
         <dependency>
             <groupId>rmg.apps.cards.support</groupId>
             <artifactId>cards-support-kotlin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>rmg.apps.cards.support</groupId>
-            <artifactId>cards-support-kotlin</artifactId>
-            <classifier>javascript</classifier>
-        </dependency>
-        <dependency>
-            <groupId>rmg.apps.cards.support</groupId>
-            <artifactId>cards-support-kotlin-jvm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>rmg.apps.cards.support</groupId>
-            <artifactId>cards-support-kotlin-js</artifactId>
-            <classifier>javascript</classifier>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -48,17 +35,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-js</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-js</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -89,7 +66,7 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 
         <plugins>
@@ -98,7 +75,7 @@
                 <executions>
                     <execution>
                         <id>default-compile</id>
-                        <phase>none</phase>
+                        <phase>compile</phase>
                     </execution>
                     <execution>
                         <id>default-testCompile</id>
@@ -112,27 +89,18 @@
                 <executions>
                     <execution>
                         <id>compile-jvm</id>
+                        <!--
+                        Kotlin warns that Kotlin code should compile prior to Java code so that the Kotlin classes
+                        will be visible to Java. The intent here is for the opposite, so suppress this warning
+                        -->
+                        <!--suppress KotlinMavenPluginPhase -->
                         <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.build.sourceDirectory}</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/kotlin-jvm</sourceDir>
-                            </sourceDirs>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>compile-js</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>js</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.build.sourceDirectory}</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/kotlin-js</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -145,25 +113,9 @@
                         <configuration>
                             <sourceDirs>
                                 <sourceDir>${project.build.testSourceDirectory}</sourceDir>
-                                <sourceDir>${project.basedir}/src/test/kotlin-jvm</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
-                    <!-- If/when JS tests are added, re-enable the following:
-                    <execution>
-                        <id>test-js-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-js</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.build.testSourceDirectory}</sourceDir>
-                                <sourceDir>${project.basedir}/src/test/kotlin-js</sourceDir>
-                            </sourceDirs>
-                        </configuration>
-                    </execution>
-                    -->
                 </executions>
             </plugin>
             <plugin>
@@ -177,7 +129,6 @@
                     <sourceDirectories>
                         <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-                        <sourceDirectory>${project.basedir}/src/main/kotlin-jvm</sourceDirectory>
                     </sourceDirectories>
                 </configuration>
                 <executions>
@@ -222,34 +173,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>javascript-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>${project.parent.basedir}/src/main/assembly/javascript.xml</descriptor>
-                            </descriptors>
-                            <archive>
-                                <manifest>
-                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                                </manifest>
-                                <manifestEntries>
-                                    <Kotlin-Version>${kotlin-language.version}</Kotlin-Version>
-                                    <Kotlin-JS-Module-Name>cardsBase</Kotlin-JS-Module-Name>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-
 </project>

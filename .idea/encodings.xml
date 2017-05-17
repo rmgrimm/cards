@@ -10,5 +10,8 @@
     <file url="file://$PROJECT_DIR$/parent" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/support" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/support/aurelia" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/support/kotlin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/support/kotlin-js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/support/kotlin-jvm" charset="UTF-8" />
   </component>
 </project>

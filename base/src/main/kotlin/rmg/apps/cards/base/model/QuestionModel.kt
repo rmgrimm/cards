@@ -3,6 +3,8 @@ package rmg.apps.cards.base.model
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.SignifierCriteria
 import rmg.apps.cards.base.dsl.findByAll
+import rmg.apps.cards.base.toRandomizedArray
+import rmg.support.kotlin.random.RandomNumberGenerator
 import kotlin.js.JsName
 
 sealed class Question {
@@ -38,25 +40,25 @@ data class MultipleChoiceQuestion(val questionSignified: Signified, val answerSi
     class Generator<T, in U>(
         override val repository: SignifiedRepository<T, U>,
         val numAnswers: Int,
-        val answerCriteria: SignifierCriteria
+        val answerCriteria: SignifierCriteria,
+        val randomNumberGenerator: RandomNumberGenerator = RandomNumberGenerator()
     ) : Question.Generator<T, U> {
         override fun generateQuestion(fromSignified: Signified, handler: ((Question) -> Unit)?): Question {
-            // TODO(rmgrimm): Randomize the signifier that is taken for the question's answer
             val correctAnswer = fromSignified.signifiers.filter(answerCriteria::match).also {
                 it.isNotEmpty() || throw IllegalArgumentException("Question signified does not contain any signifiers that can be used as a correct answer!")
-            }.first()
+            }.run { this[randomNumberGenerator.generateInt(min = 0, max = this.lastIndex)] }
 
-            val possibleAnswers = listOf(correctAnswer) + repository.findByAll(maxResults = numAnswers - 1, order = SignifiedRepository.FindOrder.RANDOM) {
-                not {
-                    equalTo(fromSignified)
-                }
-                contains(answerCriteria)
-            }.map { (_, signified) ->
-                // TODO(rmgrimm): Randomize the signifier that is taken for the wrong answer
-                signified.signifiers.filter(answerCriteria::match).first()
-            }
-
-            // TODO(rmgrimm): Randomize the order of the answer list
+            val possibleAnswers = (
+                listOf(correctAnswer) +
+                    repository.findByAll(maxResults = numAnswers - 1, order = SignifiedRepository.FindOrder.RANDOM) {
+                        not {
+                            equalTo(fromSignified)
+                        }
+                        contains(answerCriteria)
+                    }.map { (_, signified) ->
+                        signified.signifiers.filter(answerCriteria::match).run { this[randomNumberGenerator.generateInt(min = 0, max = this.lastIndex)] }
+                    }
+                ).toRandomizedArray().toList()
 
             return MultipleChoiceQuestion(fromSignified, possibleAnswers, handler)
         }

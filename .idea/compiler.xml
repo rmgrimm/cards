@@ -11,6 +11,9 @@
         <module name="cards-base" />
         <module name="cards-frontend-aurelia" />
         <module name="cards-support-aurelia" />
+        <module name="cards-support-kotlin" />
+        <module name="cards-support-kotlin-js" />
+        <module name="cards-support-kotlin-jvm" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -24,6 +27,9 @@
       <module name="cards-root" target="1.5" />
       <module name="cards-support" target="1.5" />
       <module name="cards-support-aurelia" target="1.5" />
+      <module name="cards-support-kotlin" target="1.5" />
+      <module name="cards-support-kotlin-js" target="1.5" />
+      <module name="cards-support-kotlin-jvm" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
