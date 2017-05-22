@@ -7,6 +7,9 @@ import rmg.apps.cards.base.toRandomizedArray
 import rmg.support.kotlin.random.RandomNumberGenerator
 import kotlin.js.JsName
 
+/**
+ * TODO(rmgrimm): Describe Question
+ */
 sealed class Question {
 
     interface Generator<T, in U> {
@@ -66,7 +69,7 @@ data class MultipleChoiceQuestion(val questionSignified: Signified, val answerSi
 
     init {
         if (questionSignified.signifiers.intersect(answerSignifiers).isEmpty()) {
-            throw IllegalArgumentException("Question has no correct answer! ${questionSignified} does not contain any of ${answerSignifiers}")
+            throw IllegalArgumentException("Question has no correct answer! $questionSignified does not contain any of $answerSignifiers")
         }
     }
 

@@ -1,13 +1,12 @@
 import {inject} from "aurelia-framework";
-import {signifiedRepository} from "cards-frontend-aurelia";
+import {BindingEngine} from "aurelia-binding";
+import {signifiedRepository, StartQuizSettings, StartQuizViewModel} from "cards-frontend-aurelia";
 
-@inject(signifiedRepository)
-export class StartQuiz {
+@inject(signifiedRepository, StartQuizSettings, BindingEngine)
+export class StartQuiz extends StartQuizViewModel {
 
-  repository;
-
-  constructor(signifiedRepository) {
-    this.repository = signifiedRepository;
+  constructor(signifiedRepository, settings, bindingEngine) {
+    super(signifiedRepository, settings, bindingEngine);
   }
 
 }

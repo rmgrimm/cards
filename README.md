@@ -37,7 +37,7 @@ subproject targets both JVM and JS.
     with project-agnostic helper methods to bring Aurelia support to feel more
     native to Kotlin. This subproject targets only JavaScript
     - **cards-support-kotlin**: Interfaces for things that seem like they should be
-    part of the Kotlin stdlib, such as a Random number generator.
+    part of the Kotlin stdlib, such as a random number generator.
     - **cards-support-kotlin-jvm**: Implementations of *cards-support-kotlin* that
     target the JVM. This also includes a few "hacks", such as a JVM-annotation named
     `@kotlin.js.JsName` to facilitate easier writing of shared Kotlin code.
@@ -51,6 +51,7 @@ subproject targets both JVM and JS.
   - **cards-frontends**:
     - **cards-frontend-aurelia**: A web UI, built using a combination of
     [Kotlin][kotlin] and [Aurelia][aurelia]
+    - _others planned_
 
 
 ## Building

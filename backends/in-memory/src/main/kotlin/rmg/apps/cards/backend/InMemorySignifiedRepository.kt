@@ -6,10 +6,10 @@ import rmg.apps.cards.base.SignifiedCriteria
 import rmg.apps.cards.base.SignifiedRepository
 import rmg.apps.cards.base.dsl.SignifiedListBuilder
 import rmg.apps.cards.base.dsl.addAll
-import rmg.apps.cards.base.model.Definition
 import rmg.apps.cards.base.model.Locale
+import rmg.apps.cards.base.model.LocalizedSignifier
 import rmg.apps.cards.base.model.Signified
-import rmg.apps.cards.base.model.WrittenWord
+import rmg.apps.cards.base.model.SignifierType
 
 /**
  * [MutableSignifiedRepository] that holds all data in memory in an [ArrayList]
@@ -19,7 +19,7 @@ import rmg.apps.cards.base.model.WrittenWord
  * This will only support one user, so the user ID type is [Unit]
  */
 class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int, Unit> {
-    constructor(elements: SignifiedListBuilder.() -> Unit): this() {
+    constructor(elements: SignifiedListBuilder.() -> Unit) : this() {
         addAll(elements)
     }
 
@@ -70,47 +70,32 @@ class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int
     override fun putAll(from: Map<out Int, Signified>) = from.forEach { (key, value) -> internalPut(key, value) }
     override fun remove(key: Int): Signified? = internalPut(key, null)
 
-    override val locales: Set<Locale>
+    override val types: Set<Signified.Type>
+        get() = backingList.mapNotNull { it?.type }.toSet()
+
+    override val localesBySignifierType: Map<SignifierType, Set<Locale>>
         get() {
-            val output = HashSet<Locale>()
-            backingList.forEach {
-                it?.signifiers?.forEach {
-                    when(it) {
-                        is WrittenWord -> output.add(it.locale)
-                        is Definition -> output.add(it.locale)
-                    }
+            val out = HashMap<SignifierType, Set<Locale>>()
+            backingList.flatMap {
+                it?.signifiers?.map {
+                    it as? LocalizedSignifier
+                } ?: emptyList()
+            }.forEach {
+                if (it == null) {
+                    return@forEach
                 }
+
+                var outSet = out[it.type] as? MutableSet<Locale>
+
+                if (outSet == null) {
+                    outSet = HashSet<Locale>()
+                    out[it.type] = outSet
+                }
+
+                outSet.add(it.locale)
             }
 
-            return output
-        }
-
-    override val writtenWordLocales: Set<Locale>
-        get() {
-            val output = HashSet<Locale>()
-            backingList.forEach {
-                it?.signifiers?.forEach {
-                    when(it) {
-                        is WrittenWord -> output.add(it.locale)
-                    }
-                }
-            }
-
-            return output
-        }
-
-    override val definitionLocales: Set<Locale>
-        get() {
-            val output = HashSet<Locale>()
-            backingList.forEach {
-                it?.signifiers?.forEach {
-                    when(it) {
-                        is Definition -> output.add(it.locale)
-                    }
-                }
-            }
-
-            return output
+            return out
         }
 
     override fun find(maxResults: Int?,
@@ -145,7 +130,4 @@ class InMemorySignifiedRepository constructor() : MutableSignifiedRepository<Int
 
         return InMemoryPagedArray(0, resultsPerPage, results.toTypedArray())
     }
-
-
-
 }

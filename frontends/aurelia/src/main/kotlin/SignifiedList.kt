@@ -3,15 +3,29 @@ import rmg.apps.cards.base.model.Definition
 import rmg.apps.cards.base.model.Locale
 import rmg.apps.cards.base.model.Signified
 
-class SignifiedListViewModel(val repository: SignifiedRepository<*, *>) {
+interface SignifiedListSettings {
+    var displayWordLocales: Array<Locale>?
+    var displayDefinitionLocale: Locale?
+}
+
+class SignifiedListViewModel(
+    val repository: SignifiedRepository<*, *>,
+    val settings: SignifiedListSettings
+): SignifiedListSettings by settings {
+
+    init {
+        if (displayWordLocales === undefined) {
+            displayWordLocales = availableWordLocales
+        }
+        if (displayDefinitionLocale === undefined) {
+            displayDefinitionLocale = availableDefinitionLocales.first()
+        }
+    }
 
     val availableWordLocales: Array<Locale>
         get() = repository.writtenWordLocales.toTypedArray()
     val availableDefinitionLocales: Array<Locale>
         get() = repository.definitionLocales.toTypedArray()
-
-    var displayWordLocales: Array<Locale> = availableWordLocales
-    var displayDefinitionLocale: Locale = availableDefinitionLocales.first()
 
     val currentPage = repository.findPagedArray(resultsPerPage = 10)
 
@@ -23,8 +37,12 @@ class SignifiedListDetailViewModel {
     lateinit var signified: Signified
 
     @JsName("hasDefinition")
-    fun hasDefinition(locale: Locale?): Boolean = signified.any { signifier ->
-        locale != null && signifier is Definition && signifier.locale matches locale
+    fun hasDefinition(locale: Locale?): Boolean = if (locale == null) {
+        false
+    } else {
+        signified.any { signifier ->
+            signifier is Definition && signifier.locale matches locale
+        }
     }
 
     @JsName("activate")

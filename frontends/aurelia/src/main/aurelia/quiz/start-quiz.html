@@ -1,14 +1,58 @@
 <template>
-  <section>
+  <require from="cards-frontend-aurelia"></require>
+  <require from="../value-converters"></require>
 
+  <section>
     <label>
-      <input type="checkbox"/>
+      Question Types:
+      <br />
+      <select value.bind="questionSignifierTypes" multiple aria-multiselectable>
+        <option repeat.for="signifierType of availableSignifierTypes" model.bind="signifierType">
+          ${signifierType}
+        </option>
+      </select>
+    </label>
+    <br />
+    <label>
+      Question Locales:
+      <br />
+      <select value.bind="questionLocales" multiple aria-multiselectable>
+        <option repeat.for="locale of availableQuestionLocales | sort:languageTag" model.bind="locale" disabled.bind="answerLocales.length === 1 && locale === answerLocales[0]">
+          ${locale | localeDisplayName}
+        </option>
+      </select>
+    </label>
+    <br />
+    <label>
+      Answer Types:
+      <br />
+      <select value.bind="answerSignifierTypes" multiple aria-multiselectable>
+        <option repeat.for="signifierType of availableSignifierTypes" model.bind="signifierType">
+          ${signifierType}
+        </option>
+      </select>
+    </label>
+    <br />
+    <label>
+      Answer Locales:
+      <br />
+      <select value.bind="answerLocales" multiple aria-multiselectable>
+        <option repeat.for="locale of availableAnswerLocales | sort:languageTag" model.bind="locale" disabled.bind="questionLocales.length === 1 && locale === questionLocales[0]">
+          ${locale | localeDisplayName}
+        </option>
+      </select>
+    </label>
+    <br />
+    <label>
+      <input type="checkbox" checked.bind="sameSignifiedType"/>
       Restrict to words of the same type (NOUN, VERB, etc)
     </label>
+    <br />
     <label>
-      <input type="checkbox"/>
+      <input type="checkbox" checked.bind="sameWeight"/>
       Restrict to words of the same length
     </label>
+    <br />
     <button>Click me!</button>
   </section>
 </template>

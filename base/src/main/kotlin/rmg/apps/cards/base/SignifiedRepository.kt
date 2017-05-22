@@ -37,19 +37,38 @@ interface SignifiedRepository<T, in U> : Map<T, Signified> {
     }
 
     /**
+     * All available signified types in the repository
+     */
+    val types: Set<Signified.Type>
+
+    /**
+     * Map from signifier type to locales for it
+     */
+    val localesBySignifierType: Map<SignifierType, Set<Locale>>
+
+    /**
      * All available locales within the repository
      */
     val locales: Set<Locale>
+        get() = localesBySignifierType.values.flatten().toSet()
 
     /**
      * WrittenWord locales within the repository
      */
     val writtenWordLocales: Set<Locale>
+        get() = localesBySignifierType[WrittenWord.type] ?: emptySet()
 
     /**
      * Definition locales within the repository
      */
     val definitionLocales: Set<Locale>
+        get() = localesBySignifierType[Definition.type] ?: emptySet()
+
+    /**
+     * Spoken word locales within the repository
+     */
+    val spokenWordLocales : Set<Locale>
+        get() = localesBySignifierType[SpokenWord.type] ?: emptySet()
 
     /**
      * Find matching [Signified] options

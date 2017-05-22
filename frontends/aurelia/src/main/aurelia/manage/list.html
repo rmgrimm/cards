@@ -17,7 +17,7 @@
     <label>
       <h4>Definition Locale:</h4>
       <select value.bind="displayDefinitionLocale">
-        <option model.bind="none">No definition</option>
+        <option model.bind="null">No definition</option>
         <option repeat.for="locale of availableDefinitionLocales | sort:languageTag" model.bind="locale">${locale | localeDisplayName} (${locale.languageTag})</option>
       </select>
     </label>

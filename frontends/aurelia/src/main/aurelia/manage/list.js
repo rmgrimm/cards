@@ -1,11 +1,11 @@
 import {inject} from "aurelia-framework";
-import {SignifiedListViewModel, signifiedRepository} from "cards-frontend-aurelia";
+import {SignifiedListSettings, SignifiedListViewModel, signifiedRepository} from "cards-frontend-aurelia";
 
-@inject(signifiedRepository)
+@inject(signifiedRepository, SignifiedListSettings)
 export class SignifiedList extends SignifiedListViewModel {
 
-  constructor(repository) {
-    super(repository)
+  constructor(repository, settings) {
+    super(repository, settings)
   }
 
 }
